@@ -10,7 +10,7 @@ useHead({
     { name: 'description', content: 'Aprende el presente perfecto de una manera clara y divertida con Between Words.' },
   ],
   bodyAttrs: {
-    class: 'test',
+    class: 'bg-[#050505] text-white overflow-hidden',
   },
 })
 useSeoMeta({
