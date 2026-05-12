@@ -120,5 +120,12 @@ const goToLearning = () => {
 
 const handleStart = () => {
     store.status.hasStarted = true
+    store.status.currentStep = 'login'
+    store.status.isPcUnlocked = false
+    store.status.isWhatsappUnlocked = false
+    store.status.isFileUnlocked = false
+    store.status.isMaximized = false
+    store.status.runningApps = []
+    store.resetSecurity()
 }
 </script>

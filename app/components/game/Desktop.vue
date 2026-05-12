@@ -25,7 +25,7 @@
                     'shadow-2xl transition-all duration-500 ease-in-out',
                     isMaximized('browser')
                         ? 'fixed inset-0 z-[200] !w-screen !h-screen !rounded-none !border-0'
-                        : 'mx-auto w-full max-w-5xl !h-[80%] mt-6 rounded-2xl'
+                        : 'mx-auto w-full max-w-4xl !h-[80%] rounded-2xl'
                 ]" />
             </Transition>
 
@@ -47,7 +47,6 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { MessageSquare, Globe, Table } from 'lucide-vue-next'
 import { useGameStore } from '@/stores/useGameStore'
 
 const store = useGameStore()

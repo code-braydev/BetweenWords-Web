@@ -21,25 +21,15 @@
         </header>
         <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
             <!-- Main Content: The Learning Journey -->
-            <div class="flex-1 space-y-12 sm:space-y-20">
+            <div class="flex-1 space-y-12 sm:space-y-16">
                 <!-- 01. Introduction -->
                 <section id="intro" class="scroll-mt-24">
                     <LearnIntro />
                 </section>
 
-                <!-- 02. Core Structure -->
-                <section id="structure" class="scroll-mt-24">
-                    <LearnStructure />
-                </section>
-
-                <!-- 03. Visual Theory & Usage (New Integrated Design) -->
+                <!-- 02. Integrated Theory -->
                 <section id="theory" class="scroll-mt-24">
                     <LearnGrammarTheory />
-                </section>
-
-                <!-- 04. Practical Usage Cases -->
-                <section id="usage" class="scroll-mt-24">
-                    <LearnUsageCases />
                 </section>
             </div>
 
@@ -111,9 +101,10 @@ const isOnline = ref(true)
 
 const navLinks = [
     { name: 'Introducción', href: '#intro' },
-    { name: 'Estructura', href: '#structure' },
-    { name: 'Teoría Visual', href: '#theory' },
-    { name: 'Casos de Uso', href: '#usage' }
+    { name: 'Fórmula', href: '#formula' },
+    { name: 'Uso', href: '#usage' },
+    { name: 'Palabras clave', href: '#keywords' },
+    { name: 'Verbos', href: '#verbs' }
 ]
 
 const checkOnline = () => {

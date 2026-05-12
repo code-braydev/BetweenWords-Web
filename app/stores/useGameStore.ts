@@ -28,7 +28,7 @@ export const useGameStore = defineStore("game", {
     academic: {
       score: 0,
       completedExercises: 0,
-      totalExercises: 5,
+      totalExercises: 15,
     },
   }),
 

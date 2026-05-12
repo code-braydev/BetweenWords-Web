@@ -30,9 +30,9 @@
                 <div v-if="!submitted">
                     <div class="mb-8 border-b border-slate-200 dark:border-white/10 pb-6">
                         <h1 class="text-2xl font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-wide">Final
-                            Evaluation: Present Perfect</h1>
-                        <p class="text-sm text-slate-600 dark:text-white/60">Demuestra tus conocimientos respondiendo
-                            este cuestionario final.</p>
+                            Quiz: Present Perfect</h1>
+                        <p class="text-sm text-slate-600 dark:text-white/60">Responde todo primero y después envía el
+                            examen para revisar o ver tu nota.</p>
                     </div>
 
                     <QuizActivity />
@@ -52,7 +52,7 @@
 <script setup>
 import { ref } from 'vue'
 import { ChevronLeft, ChevronRight, RotateCw, Lock } from 'lucide-vue-next'
-import QuizActivity from '@/components/activities/QuizActivity.vue'
+import QuizActivity from '~/components/game/QuizActivitySubmit.vue'
 
 const submitted = ref(false)
 </script>
