@@ -8,10 +8,10 @@
             <ClientOnly>
                 <div v-if="store.status.currentStep === 'login'" v-motion :initial="{ opacity: 0, x: -50 }"
                     :enter="{ opacity: 1, x: 0, transition: { duration: 800, type: 'spring', stiffness: 100, damping: 15 } }"
-                    class="absolute top-[40%] left-10 sm:left-24 flex flex-col items-start z-0 hidden lg:flex">
-                    <GameClock class="mb-2" />
+                    class="absolute top-[25%] lg:top-[40%] left-6 sm:left-10 lg:left-24 flex flex-col items-start z-0">
+                    <GameClock class="mb-1 scale-75 lg:scale-100 origin-left" />
                     <p
-                        class="text-sm text-white/60 font-mono pl-3 mt-2 italic border-l border-nebula-primary/50 ml-1 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+                        class="text-[10px] lg:text-sm text-white/60 font-mono pl-3 mt-1 lg:mt-2 italic border-l border-nebula-primary/50 ml-1 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
                         The city I have enjoyed the most is...
                     </p>
                 </div>
@@ -19,7 +19,7 @@
 
             <GameLoginSystem v-if="store.status.currentStep === 'login'" class="relative z-10"
                 @unlocked="store.unlockPC()" />
-            <GameDesktop v-else class="relative z-10 w-full h-full" />
+            <GameDesktop v-else class="relative z-10 w-full h-full" @settings="$emit('settings')" />
         </div>
     </div>
 </template>
@@ -29,4 +29,5 @@ import backgroundImage from '~/assets/backgrounds/bg-1.png';
 import { useGameStore } from '~/stores/useGameStore';
 
 const store = useGameStore();
+const emit = defineEmits(['settings']);
 </script>

@@ -13,12 +13,11 @@ export const useGameStore = defineStore("game", {
       isPcUnlocked: false,
       isWhatsappUnlocked: false,
       isFileUnlocked: false,
-      currentStep: "desktop", // login, desktop, whatsapp, excel
       isMaximized: false,
+      currentStep: "login", // login, desktop, whatsapp, excel
       runningApps: [] as string[], // Apps that are open/minimized (for taskbar dots)
+      hasStarted: false, // Tracks if splash screen was dismissed
     },
-
-
 
     security: {
       attempts: 0,
@@ -51,16 +50,18 @@ export const useGameStore = defineStore("game", {
     },
 
     openApp(appName: string) {
-      if (!this.runningApps.includes(appName)) {
-        this.runningApps.push(appName);
+      if (!this.status.runningApps.includes(appName)) {
+        this.status.runningApps.push(appName);
       }
       this.status.currentStep = appName;
       this.status.isMaximized = false;
     },
-    
+
     closeApp() {
       const appName = this.status.currentStep;
-      this.runningApps = this.runningApps.filter(app => app !== appName);
+      this.status.runningApps = this.status.runningApps.filter(
+        (app) => app !== appName,
+      );
       this.status.currentStep = "desktop";
       this.status.isMaximized = false;
     },
@@ -72,9 +73,6 @@ export const useGameStore = defineStore("game", {
     toggleMaximize() {
       this.status.isMaximized = !this.status.isMaximized;
     },
-
-
-
 
     registerFailure() {
       this.security.attempts++;

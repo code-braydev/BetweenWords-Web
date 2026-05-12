@@ -1,6 +1,5 @@
 <template>
-    <UiModal :show="show" title="PROTOCOL_01: STxDENT_IDENTIFICxTION_" variant="transparent"
-        :preventClose="preventClose" @close="$emit('cancel')">
+    <UiModal :show="show" title="PROTOCOL_01: STxDENT_IDENTIFICxTION_" variant="transparent" @close="$emit('cancel')">
         <div class="space-y-6">
             <div
                 class="flex items-center gap-4 p-3 bg-nebula-primary/10 dark:bg-nebula-primary/30 rounded-xl transition-colors">

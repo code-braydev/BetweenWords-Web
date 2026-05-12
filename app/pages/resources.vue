@@ -10,7 +10,7 @@
                 INDEXED RESOURCES</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
             <UiCard v-for="(res, i) in resources" :key="res.id" v-motion :initial="{ opacity: 0, y: 30, scale: 0.97 }"
                 :enter="{ opacity: 1, y: 0, scale: 1, transition: { duration: 450, delay: 80 + i * 50 } }"
                 class="hover:border-nebula-primary/40 transition-all group relative overflow-hidden">

@@ -62,7 +62,12 @@ const sentences = [
   "You have studied English for years",
   "We have never been to Japan",
   "She has bought a new car",
-  "I have lost my passport today"
+  "I have lost my passport today",
+  "We have already eaten breakfast",
+  "She has never traveled by plane",
+  "He has written three books this year",
+  "They have known each other for years",
+  "It has rained all day long"
 ]
 
 // Initialize arrays with empty values to avoid render errors

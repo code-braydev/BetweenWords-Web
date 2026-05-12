@@ -1,6 +1,9 @@
 <template>
-    <main class="min-h-screen bg-transparent text-slate-900 dark:text-nebula-text flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 transition-colors duration-300">
-        <header v-motion :initial="{ opacity: 0, y: -20 }" :enter="{ opacity: 1, y: 0, transition: { duration: 500, ease: 'easeOut' } }" class="mb-8 sm:mb-10 lg:mb-12">
+    <main
+        class="min-h-screen bg-transparent text-slate-900 dark:text-nebula-text flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 transition-colors duration-300">
+        <header v-motion :initial="{ opacity: 0, y: -20 }"
+            :enter="{ opacity: 1, y: 0, transition: { duration: 500, ease: 'easeOut' } }"
+            class="mb-8 sm:mb-10 lg:mb-12">
             <div class="flex flex-col gap-4 mb-4">
                 <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
                     <UiBadge variant="primary" class="text-xs sm:text-sm">LECCIÓN</UiBadge>
@@ -16,108 +19,102 @@
                 fundamental.
             </p>
         </header>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-            <div class="lg:col-span-2 space-y-6 sm:space-y-8">
-                <LearnIntro />
-                <LearnStructure />
-                <LearnUsageCases />
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            <!-- Main Content: The Learning Journey -->
+            <div class="flex-1 space-y-12 sm:space-y-20">
+                <!-- 01. Introduction -->
+                <section id="intro" class="scroll-mt-24">
+                    <LearnIntro />
+                </section>
+
+                <!-- 02. Core Structure -->
+                <section id="structure" class="scroll-mt-24">
+                    <LearnStructure />
+                </section>
+
+                <!-- 03. Visual Theory & Usage (New Integrated Design) -->
+                <section id="theory" class="scroll-mt-24">
+                    <LearnGrammarTheory />
+                </section>
+
+                <!-- 04. Practical Usage Cases -->
+                <section id="usage" class="scroll-mt-24">
+                    <LearnUsageCases />
+                </section>
             </div>
-            <div v-motion :initial="{ opacity: 0, x: 30 }" :enter="{ opacity: 1, x: 0, transition: { duration: 600, delay: 400, ease: 'easeOut' } }" class="lg:col-span-1 space-y-6 sm:space-y-8 h-fit sticky top-6">
-                <UiCard class="border-nebula-cyan/30 p-4">
-                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-200 dark:border-nebula-cyan/10 transition-colors">
-                        <div class="w-1.5 h-1.5 rounded-full bg-nebula-cyan animate-pulse"></div>
-                        <h3 class="text-[10px] font-black text-nebula-cyan uppercase tracking-[0.2em]">Recurso en
-                            Vídeo</h3>
+
+            <!-- Sidebar: Supporting Tools (Desktop: Sticky, Mobile: Flow) -->
+            <aside class="w-full lg:w-80 space-y-8 h-fit lg:sticky lg:top-8">
+                <!-- Video Section -->
+                <UiCard class="border-nebula-cyan/30 p-4 bg-white/5 backdrop-blur-xl">
+                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
+                        <Video class="w-4 h-4 text-nebula-cyan" />
+                        <h3 class="text-[10px] font-black text-nebula-cyan uppercase tracking-widest">Video Tutorial
+                        </h3>
                     </div>
-                    <div
-                        class="aspect-video bg-slate-100 dark:bg-nebula-dark/60 rounded-lg border border-slate-200 dark:border-white/5 overflow-hidden relative transition-colors">
+                    <div class="aspect-video bg-black/40 rounded-xl overflow-hidden border border-white/5 relative">
                         <iframe v-if="isOnline" class="w-full h-full"
                             src="https://www.youtube-nocookie.com/embed/7aw7bQtPYCE?si=zauMx_S2872Qhu8&start=11"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
+                            title="YouTube" frameborder="0" allowfullscreen>
                         </iframe>
-                        <div v-else
-                            class="absolute inset-0 flex flex-col items-center justify-center bg-slate-200/50 dark:bg-black/40 backdrop-blur-sm transition-colors">
-                            <WifiOff class="w-6 h-6 text-nebula-primary/60 mb-2" />
-                            <p class="text-[10px] text-slate-500 dark:text-white/40 font-bold uppercase tracking-widest transition-colors">Sin conexión
-                            </p>
+                        <div v-else class="absolute inset-0 flex flex-col items-center justify-center bg-black/60">
+                            <WifiOff class="w-6 h-6 text-nebula-primary/40 mb-2" />
+                            <p class="text-[9px] uppercase font-bold text-white/20 tracking-widest">Offline Mode</p>
                         </div>
                     </div>
                 </UiCard>
 
-                <div
-                    class="p-4 bg-gradient-to-br from-nebula-primary/10 to-nebula-secondary/10 border border-slate-200 dark:border-white/10 rounded-2xl hover:border-nebula-primary/30 transition-all duration-300 shadow-lg">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-nebula-primary shadow-[0_0_8px_#f52cf5]"></div>
-                            <span class="text-[10px] font-black text-nebula-primary uppercase tracking-widest">Aria
-                                AI</span>
-                        </div>
-                        <div v-if="!isOnline"
-                            class="flex items-center gap-1 text-[9px] text-red-500 dark:text-red-400 font-bold uppercase transition-colors">
-                            <WifiOff class="w-3 h-3" /> Offline
-                        </div>
-                    </div>
-                    <p class="text-[11px] text-slate-600 dark:text-white/70 font-medium leading-relaxed mb-4 transition-colors">
-                        Asistencia en verbos y estructuras complejas.
-                    </p>
-                    <UiButton label="Consultar" variant="primary"
-                        class="w-full text-[10px] py-2 h-auto uppercase font-black tracking-widest"
-                        :disabled="!isOnline" @click="navigateTo('/message')" />
+                <!-- Progress Guide (Quick Nav) -->
+                <div class="hidden lg:block p-6 bg-white/5 border border-white/10 rounded-3xl mb-8">
+                    <h4 class="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-6">Contenido</h4>
+                    <nav class="space-y-4">
+                        <a v-for="(link, i) in navLinks" :key="i" :href="link.href"
+                            class="flex items-center gap-3 text-xs font-bold text-white/60 hover:text-nebula-cyan transition-colors group">
+                            <span
+                                class="w-1.5 h-1.5 rounded-full bg-white/10 group-hover:bg-nebula-cyan transition-colors"></span>
+                            {{ link.name }}
+                        </a>
+                    </nav>
                 </div>
-                <UiCard class="border-nebula-secondary/30 p-5 shadow-2xl">
-                    <div class="grid grid-cols-2 gap-6">
 
-                        <div class="space-y-4">
-                            <h3
-                                class="text-[11px] font-black text-nebula-secondary uppercase tracking-[0.15em] border-b border-nebula-secondary/20 pb-2">
-                                Conceptos
-                            </h3>
-                            <ul class="space-y-3">
-                                <li v-for="item in ['Fecha inespecífica', 'Relevancia actual', 'Periodo abierto']"
-                                    class="flex items-center gap-3 text-[11px] text-slate-800 dark:text-white font-bold uppercase tracking-tight transition-colors">
-                                    <span
-                                        class="w-2 h-2 bg-nebula-cyan rounded-full shrink-0 shadow-[0_0_8px_#a5b4fc]"></span>
-                                    {{ item }}
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="space-y-4 border-l border-slate-200 dark:border-white/10 pl-5 transition-colors">
-                            <h3
-                                class="text-[11px] font-black text-nebula-secondary uppercase tracking-[0.15em] border-b border-nebula-secondary/20 pb-2 text-center">
-                                Tips
-                            </h3>
-                            <div class="space-y-2 font-mono text-[11px]">
-                                <div
-                                    class="flex justify-between items-center bg-slate-100 dark:bg-white/[0.07] px-3 py-2 rounded-md border border-slate-200 dark:border-white/10 shadow-sm transition-colors">
-                                    <span class="text-slate-800 dark:text-white/80 font-bold transition-colors">I, YOU, WE...</span>
-                                    <span
-                                        class="text-nebula-cyan font-black tracking-widest bg-nebula-cyan/20 px-2 rounded">HAVE</span>
-                                </div>
-                                <div
-                                    class="flex justify-between items-center bg-slate-100 dark:bg-white/[0.07] px-3 py-2 rounded-md border border-slate-200 dark:border-white/10 shadow-sm transition-colors">
-                                    <span class="text-slate-800 dark:text-white/80 font-bold transition-colors">HE, SHE, IT...</span>
-                                    <span
-                                        class="text-nebula-primary font-black tracking-widest bg-nebula-primary/20 px-2 rounded">HAS</span>
-                                </div>
-                            </div>
-                        </div>
-
+                <!-- AI Help Card -->
+                <div
+                    class="p-6 bg-gradient-to-br from-nebula-primary/20 via-nebula-primary/5 to-transparent border border-nebula-primary/30 rounded-3xl relative overflow-hidden group">
+                    <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <Cpu class="w-24 h-24 text-nebula-primary" />
                     </div>
-                </UiCard>
-            </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-2 mb-4">
+                            <Sparkles class="w-4 h-4 text-nebula-primary" />
+                            <span class="text-[10px] font-black text-nebula-primary uppercase tracking-widest">Aria AI
+                                Assistant</span>
+                        </div>
+                        <p class="text-xs text-white/60 mb-6 leading-relaxed">
+                            ¿Tienes dudas sobre los verbos irregulares o la estructura? Aria puede ayudarte en tiempo
+                            real.
+                        </p>
+                        <UiButton label="CHAT CON ARIA" variant="primary" size="sm"
+                            class="w-full text-[10px] font-black tracking-widest" @click="navigateTo('/message')" />
+                    </div>
+                </div>
+            </aside>
         </div>
     </main>
     <Footer />
 </template>
 
 <script setup>
-import { WifiOff } from 'lucide-vue-next'
+import { WifiOff, Video, Sparkles, Cpu } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const isOnline = ref(true)
+
+const navLinks = [
+    { name: 'Introducción', href: '#intro' },
+    { name: 'Estructura', href: '#structure' },
+    { name: 'Teoría Visual', href: '#theory' },
+    { name: 'Casos de Uso', href: '#usage' }
+]
 
 const checkOnline = () => {
     isOnline.value = navigator.onLine

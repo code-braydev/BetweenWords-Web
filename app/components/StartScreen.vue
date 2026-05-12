@@ -1,99 +1,100 @@
 <template>
-    <div class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#050505] overflow-hidden transition-all duration-[1500ms] ease-in-out"
-        :class="{ 'opacity-0 scale-95': isEntering }">
+    <ClientOnly>
+        <div class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#050505] overflow-hidden transition-all duration-[1500ms] ease-in-out"
+            :class="{ 'opacity-0 scale-95': isEntering }">
 
-        <!-- Animated Background Starfield -->
-        <div class="absolute inset-0 z-0">
-            <ClientOnly>
-                <div class="stars-container">
-                    <div v-for="n in 40" :key="n" class="star" :style="generateStarStyle()"></div>
+            <div class="absolute inset-0 z-0">
+                <div v-if="stars.length > 0" class="stars-container">
+                    <div v-for="n in stars" :key="n.id" class="star" :style="n.style"></div>
                 </div>
-            </ClientOnly>
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60"></div>
-        </div>
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60"></div>
+            </div>
 
-        <!-- Enhanced Floating Background Icons -->
-        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-20">
-            <ClientOnly>
-                <div v-for="(icon, index) in floatingIcons" :key="index" class="absolute animate-float-random"
-                    :style="icon.style">
+            <!-- Enhanced Floating Background Icons -->
+            <div class="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-20">
+                <div v-if="renderedIcons.length > 0" v-for="(icon, index) in renderedIcons" :key="index"
+                    class="absolute animate-float-random" :style="icon.style">
                     <component :is="icon.component" :class="icon.class" />
                 </div>
-            </ClientOnly>
-        </div>
+            </div>
 
-        <!-- Logo & Name -->
-        <div v-motion :initial="{ opacity: 0, y: -80, rotateX: 45 }"
-            :enter="{ opacity: 1, y: 0, rotateX: 0, transition: { duration: 1000, type: 'spring', bounce: 0.5 } }"
-            class="flex flex-col items-center mb-12 sm:mb-24 relative z-10 group cursor-default">
-            <div class="relative">
-                <div
-                    class="absolute -inset-10 bg-nebula-primary rounded-full blur-[80px] opacity-5 group-hover:opacity-20 transition-opacity duration-1000">
+            <!-- Logo & Name -->
+            <div v-motion :initial="{ opacity: 0, y: -80, rotateX: 45 }"
+                :enter="{ opacity: 1, y: 0, rotateX: 0, transition: { duration: 1000, type: 'spring', bounce: 0.5 } }"
+                class="flex flex-col items-center mb-12 sm:mb-24 relative z-10 group cursor-default">
+                <div class="relative">
+                    <div
+                        class="absolute -inset-10 bg-nebula-primary rounded-full blur-[80px] opacity-5 group-hover:opacity-20 transition-opacity duration-1000">
+                    </div>
+                    <img src="/logo.png" alt="Between Words Logo"
+                        class="w-24 h-24 sm:w-44 sm:h-44 mb-4 sm:mb-6 drop-shadow-[0_0_15px_rgba(245,44,245,0.3)] animate-logo-float transform group-hover:scale-105 transition-transform duration-700" />
                 </div>
-                <img src="/logo.png" alt="Between Words Logo"
-                    class="w-24 h-24 sm:w-44 sm:h-44 mb-4 sm:mb-6 drop-shadow-[0_0_15px_rgba(245,44,245,0.3)] animate-[bounce_5s_infinite] transform group-hover:scale-105 transition-transform duration-700" />
+                <h1
+                    class="text-4xl sm:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-nebula-primary via-white to-nebula-cyan font-mono tracking-tighter uppercase drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)] text-center px-4 hover:scale-105 transition-transform duration-500">
+                    Between Words
+                </h1>
+                <div class="flex items-center gap-4 mt-4 sm:mt-6">
+                    <div class="h-[1px] w-8 sm:w-12 bg-nebula-cyan/20"></div>
+                    <p
+                        class="text-nebula-cyan/60 tracking-[0.3em] sm:tracking-[0.5em] uppercase text-[9px] sm:text-xs font-mono text-center font-bold">
+                        Interactive Learning Experience
+                    </p>
+                    <div class="h-[1px] w-8 sm:w-12 bg-nebula-cyan/20"></div>
+                </div>
             </div>
-            <h1
-                class="text-4xl sm:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-nebula-primary via-white to-nebula-cyan font-mono tracking-tighter uppercase drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)] text-center px-4 hover:scale-105 transition-transform duration-500">
-                Between Words
-            </h1>
-            <div class="flex items-center gap-4 mt-4 sm:mt-6">
-                <div class="h-[1px] w-8 sm:w-12 bg-nebula-cyan/20"></div>
-                <p
-                    class="text-nebula-cyan/60 tracking-[0.3em] sm:tracking-[0.5em] uppercase text-[9px] sm:text-xs font-mono text-center font-bold">
-                    Interactive Learning Experience
-                </p>
-                <div class="h-[1px] w-8 sm:w-12 bg-nebula-cyan/20"></div>
+
+            <!-- Giant Play Button -->
+            <button @click="handleStart" v-motion :initial="{ scale: 0, opacity: 0 }"
+                :enter="{ scale: 1, opacity: 1, transition: { duration: 1200, delay: 500, type: 'spring', bounce: 0.4 } }"
+                :hovered="{ scale: 1.05 }" :tapped="{ scale: 0.95 }"
+                class="relative group mb-12 sm:mb-32 z-20 cursor-pointer">
+
+                <!-- Sonar Rings -->
+                <div class="absolute -inset-4 bg-nebula-cyan/5 rounded-full animate-[ping_4s_infinite]"></div>
+
+                <!-- Orbiting Particle -->
+                <div class="absolute inset-0 animate-[spin_8s_linear_infinite]">
+                    <div class="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-white/20 rounded-full"></div>
+                </div>
+
+                <div
+                    class="absolute -inset-4 bg-gradient-to-r from-nebula-primary/10 via-nebula-cyan/10 to-nebula-primary/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-700 animate-[spin_6s_linear_infinite]">
+                </div>
+
+                <div
+                    class="relative w-32 h-32 sm:w-48 sm:h-48 bg-black/10 backdrop-blur-xl rounded-full border border-white/5 flex items-center justify-center shadow-xl group-hover:border-nebula-primary/20 transition-all duration-700 overflow-hidden">
+                    <Play
+                        class="w-10 h-10 sm:w-20 sm:h-20 text-white/80 ml-2 sm:ml-3 group-hover:text-white transition-all duration-700" />
+                </div>
+            </button>
+
+            <!-- Go to Learning Button -->
+            <div v-motion :initial="{ opacity: 0, y: 30 }"
+                :enter="{ opacity: 1, y: 0, transition: { duration: 1000, delay: 1000 } }"
+                class="z-10 mt-4 sm:mt-8 flex flex-col sm:flex-row gap-4">
+                <UiButton variant="subtle" size="sm" :icon="GraduationCap" label="REPASAR PRIMERO"
+                    @click="$emit('learning')"
+                    class="opacity-60 hover:opacity-100 border border-white/5 hover:border-white/10 transition-all duration-700 px-6 sm:px-8 py-3 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase z-20" />
+
+                <UiButton variant="subtle" size="sm" :icon="Users" label="MODO PROFESOR"
+                    @click="navigateTo('/professor')"
+                    class="opacity-60 hover:opacity-100 border border-white/5 hover:border-white/10 transition-all duration-700 px-6 sm:px-8 py-3 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase z-20" />
             </div>
+
+            <!-- Colorful Explosion Tunnel Layer (Performance Optimized) -->
+            <div v-if="isEntering"
+                class="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center bg-[#050505]/20 animate-fade-in">
+                <div
+                    class="w-20 h-20 rounded-full bg-gradient-to-r from-nebula-primary via-white to-nebula-cyan blur-3xl scale-0 animate-explosion">
+                </div>
+            </div>
+
         </div>
-
-        <!-- Giant Play Button -->
-        <button @click="handleStart" v-motion :initial="{ scale: 0, opacity: 0 }"
-            :enter="{ scale: 1, opacity: 1, transition: { duration: 1200, delay: 500, type: 'spring', bounce: 0.4 } }"
-            :hovered="{ scale: 1.05 }" :tapped="{ scale: 0.95 }" class="relative group mb-12 sm:mb-32 z-20 cursor-pointer">
-
-            <!-- Sonar Rings -->
-            <div class="absolute -inset-4 bg-nebula-cyan/5 rounded-full animate-[ping_4s_infinite]"></div>
-
-            <!-- Orbiting Particle -->
-            <div class="absolute inset-0 animate-[spin_8s_linear_infinite]">
-                <div class="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-white/20 rounded-full"></div>
-            </div>
-
-            <div
-                class="absolute -inset-4 bg-gradient-to-r from-nebula-primary/10 via-nebula-cyan/10 to-nebula-primary/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-700 animate-[spin_6s_linear_infinite]">
-            </div>
-
-            <div
-                class="relative w-32 h-32 sm:w-48 sm:h-48 bg-black/10 backdrop-blur-xl rounded-full border border-white/5 flex items-center justify-center shadow-xl group-hover:border-nebula-primary/20 transition-all duration-700 overflow-hidden">
-                <Play
-                    class="w-10 h-10 sm:w-20 sm:h-20 text-white/80 ml-2 sm:ml-3 group-hover:text-white transition-all duration-700" />
-            </div>
-        </button>
-
-        <!-- Go to Learning Button -->
-        <div v-motion :initial="{ opacity: 0, y: 30 }"
-            :enter="{ opacity: 1, y: 0, transition: { duration: 1000, delay: 1000 } }" class="z-10 mt-4 sm:mt-8 flex flex-col sm:flex-row gap-4">
-            <UiButton variant="subtle" size="sm" :icon="GraduationCap" label="REPASAR PRIMERO"
-                @click="$emit('learning')"
-                class="opacity-60 hover:opacity-100 border border-white/5 hover:border-white/10 transition-all duration-700 px-6 sm:px-8 py-3 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase z-20" />
-            
-            <UiButton variant="subtle" size="sm" :icon="Users" label="MODO PROFESOR"
-                @click="navigateTo('/professor')"
-                class="opacity-60 hover:opacity-100 border border-white/5 hover:border-white/10 transition-all duration-700 px-6 sm:px-8 py-3 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase z-20" />
-        </div>
-
-        <!-- Colorful Explosion Tunnel Layer (Performance Optimized) -->
-        <div v-if="isEntering" 
-            class="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center bg-[#050505]/20 animate-fade-in">
-            <div class="w-20 h-20 rounded-full bg-gradient-to-r from-nebula-primary via-white to-nebula-cyan blur-3xl scale-0 animate-explosion"></div>
-        </div>
-
-    </div>
+    </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import {
     Play, GraduationCap, Sparkles, Star, Rocket, Zap,
     Orbit, Atom, Brain, Compass, Trophy, Wand2,
@@ -102,14 +103,28 @@ import {
 } from 'lucide-vue-next';
 
 
+interface StarItem {
+    id: number;
+    style: any;
+}
+
+interface IconItem {
+    component: any;
+    class: string;
+    style: any;
+}
+
 const emit = defineEmits(['start', 'learning']);
 const isEntering = ref(false);
+const stars = ref<StarItem[]>([]);
+const renderedIcons = ref<IconItem[]>([]);
 
 const handleStart = () => {
+    if (isEntering.value) return; // Guard against double clicks
     isEntering.value = true;
     setTimeout(() => {
         emit('start');
-    }, 800); 
+    }, 800);
 };
 
 const floatingIcons = [
@@ -132,6 +147,18 @@ const floatingIcons = [
     { component: MessageSquare, class: 'w-8 h-8 text-teal-400', style: { top: '15%', left: '45%', animationDelay: '1.4s' } },
     { component: Cpu, class: 'w-9 h-9 text-slate-400', style: { bottom: '60%', right: '30%', animationDelay: '2.1s' } },
 ];
+
+onMounted(() => {
+    // Generar estrellas solo en el cliente
+    for (let i = 0; i < 40; i++) {
+        stars.value.push({
+            id: i,
+            style: generateStarStyle()
+        });
+    }
+    // Asignar iconos
+    renderedIcons.value = [...floatingIcons];
+});
 
 const generateStarStyle = () => {
     return {
@@ -184,9 +211,19 @@ const generateStarStyle = () => {
 }
 
 @keyframes explosion {
-    0% { transform: scale(0); opacity: 0; }
-    30% { opacity: 1; }
-    100% { transform: scale(100); opacity: 0; }
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(100);
+        opacity: 0;
+    }
 }
 
 .animate-fade-in {
@@ -195,6 +232,16 @@ const generateStarStyle = () => {
 
 .animate-explosion {
     animation: explosion 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes logo-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    33% { transform: translateY(-5px) rotate(-1deg); }
+    66% { transform: translateY(-2px) rotate(1deg); }
+}
+
+.animate-logo-float {
+    animation: logo-float 6s ease-in-out infinite;
 }
 
 @keyframes float-random {

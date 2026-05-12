@@ -62,6 +62,24 @@ const questions = [
     question: "How long have they been married?",
     options: ["Ten years", "Twenty years", "Fifty years"],
     correct: "Twenty years"
+  },
+  {
+    audioUrl: "/audios/listening-4.mp3",
+    question: "Has he finished the book?",
+    options: ["Yes, just now", "No, not yet", "He is still reading"],
+    correct: "Yes, just now"
+  },
+  {
+    audioUrl: "/audios/listening-5.mp3",
+    question: "Where has she been?",
+    options: ["At work", "In Paris", "At home"],
+    correct: "In Paris"
+  },
+  {
+    audioUrl: "/audios/listening-6.mp3",
+    question: "How many times has he seen the movie?",
+    options: ["Once", "Twice", "Three times"],
+    correct: "Three times"
   }
 ]
 

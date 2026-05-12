@@ -45,7 +45,10 @@
         </div>
       </div>
       <p class="text-sm text-white/60 italic max-w-sm mx-auto">Great job! Your results have been saved to your academic record.</p>
-      <UiButton label="RESTART QUIZ" variant="outline" size="lg" @click="resetQuiz" />
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <UiButton v-if="!store.user.fullName" label="COMPLETE ACADEMIC RECORD" variant="primary" size="lg" @click="store.status.hasStarted = true; $emit('open-settings')" />
+        <UiButton label="RESTART QUIZ" variant="outline" size="lg" @click="resetQuiz" />
+      </div>
     </div>
   </div>
 </template>
@@ -97,6 +100,26 @@ const questions = [
     question: "The auxiliary verb for 'He, She, It' is:",
     options: ["Have", "Has", "Is"],
     correct: 1
+  },
+  {
+    question: "Which sentence uses 'Since' correctly?",
+    options: ["I have lived here since 5 years", "I have lived here since 2018", "I have lived here for since Monday"],
+    correct: 1
+  },
+  {
+    question: "Choose the correct negative sentence:",
+    options: ["We haven't saw that film", "We haven't seen that film", "We hasn't seen that film"],
+    correct: 1
+  },
+  {
+    question: "Select the correct question:",
+    options: ["Has she already left?", "Have she already left?", "She has already left?"],
+    correct: 0
+  },
+  {
+    question: "The past participle of 'Write' is:",
+    options: ["Wrote", "Writing", "Written"],
+    correct: 2
   }
 ]
 

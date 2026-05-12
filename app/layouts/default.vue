@@ -1,34 +1,53 @@
 <template>
     <div class="h-screen w-screen overflow-hidden font-sans bg-[#050505]">
-        <!-- Pantalla de Inicio: Solo este componente se muestra al inicializar -->
+        <!-- Pantalla de Inicio -->
         <Transition enter-active-class="transition duration-1000 ease-out" enter-from-class="opacity-0 scale-95"
             enter-to-class="opacity-100 scale-100" leave-active-class="transition duration-700 ease-in"
             leave-from-class="opacity-100" leave-to-class="opacity-0 scale-110">
-            <StartScreen v-if="!hasStarted" @start="hasStarted = true" @learning="goToLearning" />
+            <StartScreen v-if="!store.status.hasStarted" @start="handleStart" @learning="goToLearning" />
         </Transition>
 
-        <!-- El resto de la app (Sidebar, Slot, etc) solo se monta si hasStarted es true -->
-        <div v-if="hasStarted"
-            class="h-full w-full flex flex-col sm:flex-row bg-slate-50 dark:bg-nebula-dark relative transition-colors duration-500 overflow-hidden">
-            <!-- Background Dinámico -->
-            <div class="absolute inset-0 bg-space-desktop bg-cover bg-center transition-all duration-700 opacity-0 dark:opacity-100"
-                :class="{ 'blur-sm scale-105': store.status.currentStep === 'login' }">
-                <div class="absolute inset-0 bg-gradient-to-br from-nebula-dark/40 via-transparent to-nebula-dark/80">
-                </div>
-            </div>
-
-            <!-- Sidebar/BottomNav -->
-            <Sidebar class="relative z-20" :glass="$route.path === '/'"
+        <!-- Main Work Area (Sidebar + Apps) -->
+        <div v-if="store.status.hasStarted" :class="[
+            'h-full w-full relative transition-colors duration-500 overflow-hidden',
+            isAppFullscreen ? 'flex bg-black' : 'flex flex-col sm:flex-row bg-slate-50 dark:bg-nebula-dark'
+        ]">
+            <!-- Sidebar -->
+            <Sidebar v-if="!isAppFullscreen" class="relative z-20" :glass="$route.path === '/'"
                 @settings="showSettingsModal = !showSettingsModal" />
 
-            <main class="flex-1 relative z-10 overflow-hidden">
-                <div class="relative z-10 h-full w-full overflow-y-auto custom-scrollbar flex flex-col pb-20 sm:pb-0">
-                    <div class="flex-1">
+            <!-- App Container -->
+            <main :class="[
+                'relative z-10 overflow-hidden',
+                isAppFullscreen ? 'fixed inset-0 w-screen h-screen' : 'flex-1'
+            ]">
+                <!-- Background Dinámico (Desktop Only) -->
+                <div v-if="$route.path === '/'"
+                    class="absolute inset-0 bg-space-desktop bg-cover bg-center transition-all duration-700"
+                    :class="{ 'blur-sm scale-105 opacity-50': store.status.currentStep === 'login' }">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-nebula-dark/40 via-transparent to-nebula-dark/80">
+                    </div>
+                </div>
+
+                <div :class="[
+                    'relative z-10 h-full w-full flex flex-col',
+                    isAppFullscreen ? 'p-0 overflow-hidden' : 'overflow-y-auto custom-scrollbar pb-4 sm:pb-0'
+                ]">
+                    <div class="flex-1 min-h-0">
                         <slot />
                     </div>
                 </div>
             </main>
         </div>
+
+        <!-- macOS Style Dock (Only on Desktop after login) -->
+        <GameTaskbar v-if="store.status.isPcUnlocked && $route.path === '/' && !isAppFullscreen"
+            @settings="showSettingsModal = !showSettingsModal" />
+
+        <!-- Registro de Estudiante / Settings -->
+        <StudentModal :show="shouldShowModal" @registered="showSettingsModal = false"
+            @cancel="showSettingsModal = false" />
     </div>
 </template>
 
@@ -61,6 +80,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useGameStore } from '@/stores/useGameStore'
 import { useVoice } from '@/composables/useVoice'
+import StudentModal from '@/components/StudentModal.vue'
 
 const route = useRoute()
 const store = useGameStore()
@@ -70,33 +90,35 @@ const isUserInfoComplete = computed(() => store.user.fullName && store.user.grad
 const isModalForced = computed(() => !isUserInfoComplete.value)
 const showSettingsModal = ref(false)
 const isMounted = ref(false)
-
-// Estado inicial: Falso para mostrar el botón de Play primero
-const hasStarted = ref(false)
-
 onMounted(() => {
     isMounted.value = true
 
     // Si ya hay progreso real (PC desbloqueado) o no estamos en el index, saltamos el inicio
     if (store.status.isPcUnlocked || route.path !== '/') {
-        hasStarted.value = true
+        store.status.hasStarted = true
     }
 })
 
 // Watch para asegurar que si navegamos (ej. Modo Profesor) el StartScreen se oculte
 watch(() => route.path, (newPath) => {
     if (newPath !== '/') {
-        hasStarted.value = true
+        store.status.hasStarted = true
     }
 })
 
 const shouldShowModal = computed(() => {
     if (!isMounted.value) return false
-    return showSettingsModal.value || isModalForced.value
+    return showSettingsModal.value
 })
 
+const isAppFullscreen = computed(() => route.path === '/' && store.status.isMaximized)
+
 const goToLearning = () => {
-    hasStarted.value = true
+    store.status.hasStarted = true
     navigateTo('/learning')
+}
+
+const handleStart = () => {
+    store.status.hasStarted = true
 }
 </script>

@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   devtools: { enabled: true },
+  debug: true,
   runtimeConfig: {
     geminiApiKey: process.env.GEMINI_API_KEY,
     geminiModel: process.env.GEMINI_MODEL || "gemini-2.5-flash",

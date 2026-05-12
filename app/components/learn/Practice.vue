@@ -55,11 +55,10 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Type, Headphones, Mic2, FileQuestion, Info, Target } from 'lucide-vue-next'
+import { Type, Headphones, Mic2, Info, Target } from 'lucide-vue-next'
 import WritingActivity from '@/components/activities/WritingActivity.vue'
 import ListeningActivity from '@/components/activities/ListeningActivity.vue'
 import SpeakingActivity from '@/components/activities/SpeakingActivity.vue'
-import QuizActivity from '@/components/activities/QuizActivity.vue'
 
 const activeTab = ref('writing')
 

@@ -66,7 +66,12 @@ const sentences = [
   { text: "She has worked in this company for five years", audio: "/audios/speaking-2.mp3" },
   { text: "We have seen that movie twice already", audio: "/audios/speaking-3.mp3" },
   { text: "He has just finished his homework", audio: "/audios/speaking-4.mp3" },
-  { text: "They have lived in London since last year", audio: "/audios/speaking-5.mp3" }
+  { text: "They have lived in London since last year", audio: "/audios/speaking-5.mp3" },
+  { text: "I have already seen that movie", audio: "/audios/speaking-6.mp3" },
+  { text: "She has never visited New York", audio: "/audios/speaking-7.mp3" },
+  { text: "We have finished our homework", audio: "/audios/speaking-8.mp3" },
+  { text: "He has lost his mobile phone", audio: "/audios/speaking-9.mp3" },
+  { text: "You have done a great job", audio: "/audios/speaking-10.mp3" }
 ]
 
 const transcripts = ref(sentences.map(() => ''))
@@ -75,62 +80,71 @@ const results = ref(sentences.map(() => null))
 const isRecording = ref(false)
 const currentIdx = ref(null)
 const debugStatus = ref('Ready')
+const accumulatedText = ref('')
 
 let recognition = null
 
-onMounted(() => {
+const startRecognition = (idx) => {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
   if (!SpeechRecognition) {
-    debugStatus.value = 'Browser not supported'
+    debugStatus.value = 'Not supported'
     return
+  }
+
+  // Si ya existe una instancia, la detenemos
+  if (recognition) {
+    try { recognition.stop() } catch(e) {}
   }
 
   recognition = new SpeechRecognition()
   recognition.lang = 'en-US'
-  recognition.continuous = true
+  recognition.continuous = true // Volvemos a continuo para probar en Vercel/SSL
   recognition.interimResults = true
 
   recognition.onstart = () => {
     debugStatus.value = 'Listening...'
-    console.log('Recognition started')
+    isRecording.value = true
   }
 
   recognition.onresult = (event) => {
-    let finalResult = ''
-    for (let i = 0; i < event.results.length; ++i) {
-      finalResult += event.results[i][0].transcript + ' '
+    let final = ''
+    let interim = ''
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        final += event.results[i][0].transcript
+      } else {
+        interim += event.results[i][0].transcript
+      }
     }
-    
-    if (finalResult.trim()) {
-      console.log('Final Result:', finalResult.trim())
-      transcripts.value[currentIdx.value] = finalResult.trim()
-      debugStatus.value = 'Heard: ' + finalResult.trim().substring(0, 20)
+    const current = (final || interim).trim()
+    if (current) {
+      transcripts.value[idx] = current
+      debugStatus.value = 'Heard: ' + current.substring(0, 15)
     }
-  }
-
-  recognition.onsoundstart = () => {
-    // Silencioso para limpieza de UI
   }
 
   recognition.onerror = (event) => {
-    console.error('Recognition error:', event.error)
-    if (event.error === 'network') {
-      debugStatus.value = 'Network Error'
-    }
-    
-    if (event.error !== 'no-speech' && event.error !== 'aborted') {
-      isRecording.value = false
-    }
+    console.error('Error:', event.error)
+    debugStatus.value = 'Error: ' + event.error
+    isRecording.value = false
   }
 
   recognition.onend = () => {
+    console.log('Mic ended')
     if (isRecording.value) {
-      recognition.start()
+      // Si se cortó pero seguimos en estado grabación, reintentamos
+      try { recognition.start() } catch(e) {}
     } else {
-      debugStatus.value = 'Processing...'
+      debugStatus.value = 'Analyzing...'
       processFinalResult()
     }
   }
+
+  recognition.start()
+}
+
+onMounted(() => {
+  // Ya no inicializamos aquí para evitar objetos "muertos"
 })
 
 const processFinalResult = () => {
@@ -154,10 +168,13 @@ const processFinalResult = () => {
       colors: ['#f52cf5', '#00f2ff']
     })
     store.academic.completedExercises++
-    debugStatus.value = 'Success!'
+    debugStatus.value = 'Excellent!'
+  } else if (similarity >= 0.50) {
+    results.value[currentIdx.value] = 'low'
+    debugStatus.value = 'Close! Try again'
   } else {
     results.value[currentIdx.value] = 'low'
-    debugStatus.value = 'Try again'
+    debugStatus.value = 'Keep trying'
   }
 }
 
@@ -201,13 +218,13 @@ const listen = (url) => {
 const toggleRecord = (idx) => {
   if (isRecording.value) {
     isRecording.value = false
-    recognition.stop()
+    if (recognition) recognition.stop()
   } else {
     currentIdx.value = idx
-    isRecording.value = true
-    transcripts.value[idx] = ""
+    accumulatedText.value = ''
+    transcripts.value[idx] = ''
     results.value[idx] = null
-    recognition.start()
+    startRecognition(idx)
   }
 }
 </script>
