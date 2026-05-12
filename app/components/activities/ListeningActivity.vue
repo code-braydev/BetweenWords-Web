@@ -1,0 +1,97 @@
+<template>
+  <div class="space-y-8">
+    <div v-for="(q, idx) in questions" :key="idx"
+      class="p-6 bg-slate-50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5 shadow-sm transition-all"
+      :class="{ 'border-emerald-500/50 bg-emerald-500/5': results[idx] === 'correct' }">
+
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-[10px] font-black text-nebula-cyan uppercase tracking-widest">Listening Task {{ idx + 1
+          }}</span>
+        <div v-if="results[idx]" class="flex items-center gap-2">
+          <span v-if="results[idx] === 'correct'" class="text-xs text-emerald-500 font-bold">✅ Correct answer</span>
+          <span v-else class="text-xs text-red-500 font-bold">❌ Incorrect answer</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-6 py-4">
+        <button @click="playAudio(q.audioUrl)"
+          class="w-20 h-20 rounded-full bg-nebula-primary/10 border border-nebula-primary/30 flex items-center justify-center hover:bg-nebula-primary/20 transition-all group active:scale-90">
+          <Volume2 class="w-10 h-10 text-nebula-primary group-hover:scale-110 transition-transform" />
+        </button>
+        <p class="text-sm font-bold text-slate-700 dark:text-white/90 italic text-center">{{ q.question }}</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+        <button v-for="opt in q.options" :key="opt" @click="selectOption(idx, opt)"
+          :disabled="results[idx] === 'correct'" class="p-4 rounded-xl border transition-all text-sm font-medium"
+          :class="[
+            selectedAnswers[idx] === opt
+              ? (results[idx] === 'correct' ? 'bg-emerald-500 text-white border-emerald-400' : 'bg-nebula-primary text-white border-nebula-primary/50')
+              : 'bg-white dark:bg-black/40 text-slate-600 dark:text-white/60 border-slate-200 dark:border-white/10 hover:border-nebula-primary/30'
+          ]">
+          {{ opt }}
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { Volume2 } from 'lucide-vue-next'
+import confetti from 'canvas-confetti'
+import { useGameStore } from '@/stores/useGameStore'
+
+const store = useGameStore()
+
+const questions = [
+  {
+    audioUrl: "/audios/listening-1.mp3",
+    question: "What did I do?",
+    options: ["Cooked dinner", "Cleaned the kitchen", "Slept"],
+    correct: "Cleaned the kitchen"
+  },
+  {
+    audioUrl: "/audios/listening-2.mp3",
+    question: "What did she lose?",
+    options: ["Her keys", "Her wallet", "Her phone"],
+    correct: "Her phone"
+  },
+  {
+    audioUrl: "/audios/listening-3.mp3",
+    question: "How long have they been married?",
+    options: ["Ten years", "Twenty years", "Fifty years"],
+    correct: "Twenty years"
+  }
+]
+
+const selectedAnswers = ref(questions.map(() => null))
+const results = ref(questions.map(() => null))
+
+const playAudio = (url) => {
+  const audio = new Audio(url)
+  audio.play()
+}
+
+const selectOption = (idx, opt) => {
+  selectedAnswers.value[idx] = opt
+  if (opt === questions[idx].correct) {
+    results.value[idx] = 'correct'
+    confetti({
+      particleCount: 80,
+      spread: 50,
+      origin: { y: 0.8 },
+      colors: ['#00f2ff', '#ffffff']
+    })
+    store.academic.completedExercises++
+  } else {
+    results.value[idx] = 'incorrect'
+    setTimeout(() => {
+      if (results.value[idx] === 'incorrect') {
+        results.value[idx] = null
+        selectedAnswers.value[idx] = null
+      }
+    }, 1500)
+  }
+}
+</script>

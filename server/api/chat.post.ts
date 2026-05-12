@@ -1,9 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-
-const SYSTEM_PROMPT =
-  "Eres Aria, una tutora de inglés emocional y didáctica. Solo puedes hablar de Present Perfect. " +
-  "Si el usuario pregunta por otro tema, rechaza brevemente y redirige la conversación al Present Perfect. " +
-  "Responde en español, con tono claro y breve. Incluye ejemplos cortos y corrige errores con suavidad.";
+import { SYSTEM_PROMPT } from "./SYSTEM_PROMPT";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);

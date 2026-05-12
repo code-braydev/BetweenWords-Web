@@ -1,5 +1,17 @@
 <template>
-    <div class="flex bg-white/5 dark:bg-black/50 backdrop-blur-2xl rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 flex-col sm:flex-row">
+    <div class="flex bg-white/5 dark:bg-black/50 backdrop-blur-2xl rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 flex-col shadow-2xl relative group">
+        <!-- Window Controls Header (Auto-hide) -->
+        <div class="absolute top-0 left-0 right-0 h-10 bg-black/60 backdrop-blur-xl border-b border-white/10 flex items-center px-4 shrink-0 z-50 transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
+            <GameWindowControls />
+            <div class="flex-1 text-center">
+                <span class="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">WhatsApp Desktop</span>
+            </div>
+        </div>
+        
+        <!-- Hover Trigger Area -->
+        <div class="absolute top-0 left-0 right-0 h-2 z-[60]"></div>
+
+        <div class="flex flex-1 flex-col sm:flex-row overflow-hidden">
         <!-- Sidebar Contacts -->
         <div class="w-full sm:w-1/3 border-b sm:border-b-0 sm:border-r border-white/10 flex flex-col bg-black/20">
             <div class="p-4 border-b border-white/10 flex items-center justify-between">
@@ -71,6 +83,7 @@
                     <Send class="w-5 h-5 text-white/50" />
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </template>

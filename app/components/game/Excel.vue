@@ -1,36 +1,37 @@
 <template>
-    <div class="flex flex-col bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl rounded-2xl overflow-hidden border border-slate-300 dark:border-white/10 shadow-2xl">
-        <!-- Excel Header / Ribbon -->
-        <div class="bg-[#107C41] text-white p-2 flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-white/20 rounded flex items-center justify-center font-bold text-lg border border-white/30">
-                    X
+    <div class="flex flex-col bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl rounded-2xl overflow-hidden border border-slate-300 dark:border-white/10 shadow-2xl relative group">
+        <!-- Excel Header / Ribbon (Auto-hide) -->
+        <div class="absolute top-0 left-0 right-0 z-50 transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out shadow-xl">
+            <div class="bg-[#107C41] text-white p-2 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-white/20 rounded flex items-center justify-center font-bold text-lg border border-white/30">
+                        X
+                    </div>
+                    <span class="text-sm font-medium">Grades_Report.xlsx - Excel</span>
                 </div>
-                <span class="text-sm font-medium">Grades_Report.xlsx - Excel</span>
+                <GameWindowControls />
             </div>
-            <div class="flex gap-2">
-                <div class="w-3 h-3 rounded-full bg-white/30 hover:bg-white/50 cursor-pointer"></div>
-                <div class="w-3 h-3 rounded-full bg-white/30 hover:bg-white/50 cursor-pointer"></div>
-                <div class="w-3 h-3 rounded-full bg-white/30 hover:bg-red-500 cursor-pointer"></div>
+
+            <!-- Ribbon Toolbar -->
+            <div class="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-white/10 p-2 flex gap-4 shrink-0 overflow-x-auto custom-scrollbar">
+                <div class="flex flex-col items-center gap-1 cursor-pointer text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white">
+                    <Save class="w-5 h-5" />
+                    <span class="text-[9px]">Save</span>
+                </div>
+                <div class="w-px h-8 bg-slate-300 dark:bg-white/10 mx-1"></div>
+                <div class="flex flex-col items-center gap-1 cursor-pointer text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white">
+                    <FileText class="w-5 h-5" />
+                    <span class="text-[9px]">Home</span>
+                </div>
+                <div class="flex flex-col items-center gap-1 cursor-pointer text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white">
+                    <LayoutGrid class="w-5 h-5" />
+                    <span class="text-[9px]">Insert</span>
+                </div>
             </div>
         </div>
 
-        <!-- Ribbon Toolbar -->
-        <div class="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-white/10 p-2 flex gap-4 shrink-0 overflow-x-auto custom-scrollbar">
-            <div class="flex flex-col items-center gap-1 cursor-pointer text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white">
-                <Save class="w-5 h-5" />
-                <span class="text-[9px]">Save</span>
-            </div>
-            <div class="w-px h-8 bg-slate-300 dark:bg-white/10 mx-1"></div>
-            <div class="flex flex-col items-center gap-1 cursor-pointer text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white">
-                <FileText class="w-5 h-5" />
-                <span class="text-[9px]">Home</span>
-            </div>
-            <div class="flex flex-col items-center gap-1 cursor-pointer text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white">
-                <LayoutGrid class="w-5 h-5" />
-                <span class="text-[9px]">Insert</span>
-            </div>
-        </div>
+        <!-- Hover Trigger Area -->
+        <div class="absolute top-0 left-0 right-0 h-2 z-[60]"></div>
 
         <!-- Formula Bar -->
         <div class="bg-white dark:bg-slate-900 border-b border-slate-300 dark:border-white/10 p-2 flex items-center gap-3 shrink-0">

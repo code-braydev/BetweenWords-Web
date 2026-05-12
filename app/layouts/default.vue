@@ -9,7 +9,7 @@
 
         <!-- El resto de la app (Sidebar, Slot, etc) solo se monta si hasStarted es true -->
         <div v-if="hasStarted"
-            class="h-full w-full flex bg-slate-50 dark:bg-nebula-dark relative transition-colors duration-500 overflow-hidden">
+            class="h-full w-full flex flex-col sm:flex-row bg-slate-50 dark:bg-nebula-dark relative transition-colors duration-500 overflow-hidden">
             <!-- Background Dinámico -->
             <div class="absolute inset-0 bg-space-desktop bg-cover bg-center transition-all duration-700 opacity-0 dark:opacity-100"
                 :class="{ 'blur-sm scale-105': store.status.currentStep === 'login' }">
@@ -17,12 +17,12 @@
                 </div>
             </div>
 
-            <!-- Sidebar solo visible tras iniciar -->
+            <!-- Sidebar/BottomNav -->
             <Sidebar class="relative z-20" :glass="$route.path === '/'"
                 @settings="showSettingsModal = !showSettingsModal" />
 
-            <main class="flex-1 relative z-10">
-                <div class="relative z-10 h-full w-full overflow-y-auto custom-scrollbar flex flex-col">
+            <main class="flex-1 relative z-10 overflow-hidden">
+                <div class="relative z-10 h-full w-full overflow-y-auto custom-scrollbar flex flex-col pb-20 sm:pb-0">
                     <div class="flex-1">
                         <slot />
                     </div>
@@ -58,8 +58,7 @@
 </style>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useGameStore } from '@/stores/useGameStore'
 import { useVoice } from '@/composables/useVoice'
 
@@ -80,6 +79,13 @@ onMounted(() => {
 
     // Si ya hay progreso real (PC desbloqueado) o no estamos en el index, saltamos el inicio
     if (store.status.isPcUnlocked || route.path !== '/') {
+        hasStarted.value = true
+    }
+})
+
+// Watch para asegurar que si navegamos (ej. Modo Profesor) el StartScreen se oculte
+watch(() => route.path, (newPath) => {
+    if (newPath !== '/') {
         hasStarted.value = true
     }
 })

@@ -13,7 +13,8 @@ export const useChatStore = defineStore("chat", {
       {
         id: "welcome",
         role: "assistant",
-        content: "¡Hola! Soy Aria. Que parte del tema necesitas ayuda?",
+        content:
+          "¡Hola! Soy Aria, tu guía en esta aventura. 🌟 Cuéntame, para empezar nuestro camino con el Present Perfect: ¿hay un concepto que se te dificulta entender?",
         timestamp: new Date(),
       },
     ] as ChatMessage[],

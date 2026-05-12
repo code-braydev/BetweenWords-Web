@@ -21,7 +21,6 @@
                 <LearnIntro />
                 <LearnStructure />
                 <LearnUsageCases />
-                <LearnPractice />
             </div>
             <div v-motion :initial="{ opacity: 0, x: 30 }" :enter="{ opacity: 1, x: 0, transition: { duration: 600, delay: 400, ease: 'easeOut' } }" class="lg:col-span-1 space-y-6 sm:space-y-8 h-fit sticky top-6">
                 <UiCard class="border-nebula-cyan/30 p-4">
