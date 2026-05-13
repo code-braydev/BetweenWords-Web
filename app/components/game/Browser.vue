@@ -35,7 +35,7 @@
                             examen para revisar o ver tu nota.</p>
                     </div>
 
-                    <QuizActivity />
+                    <GameQuizActivity />
 
                     <div
                         class="mt-12 p-6 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 text-center">
@@ -52,7 +52,6 @@
 <script setup>
 import { ref } from 'vue'
 import { ChevronLeft, ChevronRight, RotateCw, Lock } from 'lucide-vue-next'
-import QuizActivity from '~/components/game/QuizActivitySubmit.vue'
 
 const submitted = ref(false)
 </script>

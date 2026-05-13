@@ -27,6 +27,7 @@
     "vue": "^3.5.33"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/markdown-it": "^14.1.2"
   }
 }
