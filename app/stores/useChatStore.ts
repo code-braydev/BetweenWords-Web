@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useGameStore } from "~/stores/useGameStore";
 
 type ChatMessage = {
   id: string;
@@ -29,6 +30,17 @@ export const useChatStore = defineStore("chat", {
       const messageText = text.trim();
       if (!messageText) return;
 
+      const gameStore = useGameStore();
+      const sessionId = gameStore.session.id;
+      const topic = gameStore.session.topic;
+
+      if (!sessionId) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: "No hay una sesión válida para el chat.",
+        });
+      }
+
       this.messages.push({
         id: Date.now().toString(),
         role: "user",
@@ -40,10 +52,15 @@ export const useChatStore = defineStore("chat", {
 
       try {
         const response = await $fetch<{ content: string; answer: string }>(
-          "/api/chat",
+          `/api/sessions/${sessionId}/chat`,
           {
             method: "POST",
-            body: { message: messageText, history: this.messages },
+            body: {
+              message: messageText,
+              history: this.messages,
+              topic,
+              sessionId,
+            },
           },
         );
 

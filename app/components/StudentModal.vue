@@ -11,22 +11,15 @@
                         class="text-white/60 dark:text-nebula-text font-mono text-sm font-bold uppercase transition-colors">
                         Identity Verification</h4>
                     <p class="text-[10px] text-nebula-primary/80 dark:text-nebula-cyan/70 font-mono italic">Please
-                        provide your academic records to
+                        provide your personal details to
                         proceed.</p>
                 </div>
             </div>
             <div class="space-y-4">
                 <UiInput v-model="form.fullName" label="Full Name" placeholder="E.g. Michelle Ruiz" :icon="User"
                     :glass="true" />
-
-                <div class="grid grid-cols-2 gap-4">
-                    <UiSelect v-model="form.grade" label="Grade" placeholder="Select grade" :options="gradeOptions"
-                        :glass="true" />
-                    <UiInput v-model="form.group" label="Group / Section" placeholder="01, 02..." :icon="Hash"
-                        :glass="true" />
-                </div>
                 <div class="space-y-2">
-                    <UiInput v-model="form.nickname" label="Nickname (Optional)" placeholder="E.g. 123456" :icon="Hash"
+                    <UiInput v-model="form.nickname" label="Nickname (Optional)" placeholder="E.g. Michi / Guest-User" :icon="Hash"
                         :glass="true" />
                     <p class="text-[9px] text-nebula-primary/70 dark:text-nebula-cyan/70 font-mono italic">This
                         information is optional; it is only
@@ -60,33 +53,23 @@ const store = useGameStore()
 // Form state
 const form = ref({
     fullName: '',
-    grade: '11',
-    group: '',
     nickname: ''
 })
 
-const gradeOptions = [
-    { value: '11', label: 'Grade 11°' },
-    { value: '10', label: 'Grade 10°' }
-]
-
 // Form validation
 const isFormValid = computed(() => {
-    return form.value.fullName.length > 3 && form.value.group.length > 0
+    return form.value.fullName.trim().length > 3
 })
 
 // Prevent closing if user is not registered
-const isUserInfoComplete = computed(() => store.user.fullName && store.user.grade && store.user.group)
+const isUserInfoComplete = computed(() => !!store.user.fullName)
 const preventClose = computed(() => !isUserInfoComplete.value)
 
 // Handle form submission
 const handleSubmit = () => {
     if (isFormValid.value) {
-        store.user.fullName = form.value.fullName
-        store.user.grade = form.value.grade
-        store.user.group = form.value.group
-        store.user.nickname = form.value.nickname
-
+        store.user.fullName = form.value.fullName.trim()
+        store.user.nickname = form.value.nickname.trim() || 'Guest-User'
         emit('registered')
     }
 }

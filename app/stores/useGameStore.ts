@@ -5,8 +5,6 @@ export const useGameStore = defineStore("game", {
     user: {
       nickname: "",
       fullName: "",
-      grade: "",
-      group: "",
     },
 
     status: {
@@ -14,9 +12,9 @@ export const useGameStore = defineStore("game", {
       isWhatsappUnlocked: false,
       isFileUnlocked: false,
       isMaximized: false,
-      currentStep: "login", // login, desktop, whatsapp, excel
-      runningApps: [] as string[], // Apps that are open/minimized (for taskbar dots)
-      hasStarted: false, // Tracks if splash screen was dismissed
+      currentStep: "login",
+      runningApps: [] as string[],
+      hasStarted: false,
     },
 
     security: {
@@ -29,7 +27,18 @@ export const useGameStore = defineStore("game", {
       score: 0,
       completedExercises: 0,
       totalExercises: 15,
+      isExamCompleted: false,
     },
+
+    session: {
+      id: "",
+      topic: "",
+      sheetUrl: "",
+      valid: false,
+      expiresAt: 0,
+    },
+
+    _lockTimer: null as any,
   }),
 
   actions: {
@@ -41,6 +50,10 @@ export const useGameStore = defineStore("game", {
       this.security.attempts = 0;
       this.security.isLocked = false;
       this.security.lockTime = 0;
+      if (this._lockTimer) {
+        clearInterval(this._lockTimer);
+        this._lockTimer = null;
+      }
     },
 
     unlockPC() {
@@ -79,27 +92,79 @@ export const useGameStore = defineStore("game", {
 
       if (this.security.attempts >= 3) {
         this.security.isLocked = true;
-
         const lockCycle = (this.security.attempts - 3) % 3;
         this.security.lockTime = (lockCycle + 1) * 5;
-
-        const timer = setInterval(() => {
-          this.security.lockTime--;
-          if (this.security.lockTime <= 0) {
-            this.security.isLocked = false;
-            clearInterval(timer);
-          }
-        }, 1000);
+        this.startLockTimer();
       }
+    },
+
+    startLockTimer() {
+      if (!this.security.isLocked || this.security.lockTime <= 0) return;
+
+      if (this._lockTimer) clearInterval(this._lockTimer);
+
+      this._lockTimer = setInterval(() => {
+        this.security.lockTime--;
+        if (this.security.lockTime <= 0) {
+          this.security.isLocked = false;
+          this.security.attempts = 0;
+          if (this._lockTimer) clearInterval(this._lockTimer);
+          this._lockTimer = null;
+        }
+      }, 1000);
     },
 
     setScore(points: number) {
       this.academic.score = points;
     },
+
+    setSession(session: {
+      id: string;
+      topic?: string;
+      sheetUrl?: string;
+      expiresAt?: number;
+    }) {
+      // If the session ID changed, reset the game state
+      if (this.session.id && this.session.id !== session.id) {
+        this.resetGame();
+      }
+
+      this.session.id = session.id;
+      this.session.topic = session.topic ?? "";
+      this.session.sheetUrl = session.sheetUrl ?? "";
+      this.session.expiresAt = session.expiresAt ?? 0;
+      this.session.valid = true;
+    },
+
+    clearSession() {
+      this.session.id = "";
+      this.session.topic = "";
+      this.session.sheetUrl = "";
+      this.session.valid = false;
+      this.session.expiresAt = 0;
+    },
+
+    resetGame() {
+      // Reset everything except user nickname if desired,
+      // but usually for a new session we want a full reset.
+      this.status.isPcUnlocked = false;
+      this.status.isWhatsappUnlocked = false;
+      this.status.isFileUnlocked = false;
+      this.status.isMaximized = false;
+      this.status.currentStep = "login";
+      this.status.runningApps = [];
+
+      this.academic.score = 0;
+      this.academic.completedExercises = 0;
+      this.academic.isExamCompleted = false;
+
+      this.resetSecurity();
+    },
   },
 
   persist: {
     key: "ova-state",
+    pick: ["user", "status", "security", "academic", "session"],
     storage:
       typeof localStorage !== "undefined"
         ? localStorage

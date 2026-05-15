@@ -50,6 +50,16 @@
             <!-- Separator -->
             <div class="h-8 w-[1px] bg-white/20 mx-1"></div>
 
+            <!-- Search / Spotlight -->
+            <div class="relative group">
+                <button @click="openSpotlight"
+                    class="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center shadow-lg transform group-hover:scale-125 group-hover:-translate-y-2 transition-all duration-300">
+                    <Search class="w-6 h-6 text-white/80" />
+                </button>
+                <span
+                    class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/80 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase font-bold tracking-widest whitespace-nowrap">Search</span>
+            </div>
+
             <!-- Settings -->
             <div class="relative group">
                 <button @click="$emit('settings')"
@@ -57,7 +67,7 @@
                     <Settings class="w-6 h-6 text-white/80" />
                 </button>
                 <span
-                    class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/80 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase font-bold tracking-widest">Settings</span>
+                    class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/80 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase font-bold tracking-widest whitespace-nowrap">Settings</span>
             </div>
         </div>
     </div>
@@ -65,8 +75,12 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { MessageSquare, Globe, Table, Settings } from 'lucide-vue-next'
+import { MessageSquare, Globe, Table, Settings, Search } from 'lucide-vue-next'
 import { useGameStore } from '@/stores/useGameStore'
+
+const openSpotlight = () => {
+    window.dispatchEvent(new CustomEvent('open-spotlight'))
+}
 
 const store = useGameStore()
 const currentTime = ref('')

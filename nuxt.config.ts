@@ -11,6 +11,8 @@ export default defineNuxtConfig({
     firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
     firebaseClientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     firebasePrivateKey: process.env.FIREBASE_PRIVATE_KEY,
+    deepgramApiKey: process.env.DEEPGRAM_API_KEY,
+    assemblyAiApiKey: process.env.ASSEMBLYAI_API_KEY,
   },
   modules: [
     "@nuxtjs/tailwindcss",

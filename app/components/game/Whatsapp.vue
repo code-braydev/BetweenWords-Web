@@ -9,9 +9,10 @@
             </div>
         </div>
 
-        <div class="flex flex-1 flex-col sm:flex-row overflow-hidden">
+        <div class="flex flex-1 flex-col sm:flex-row overflow-hidden relative">
             <!-- Sidebar Contacts -->
-            <div class="w-full sm:w-1/3 border-b sm:border-b-0 sm:border-r border-white/10 flex flex-col bg-black/20">
+            <div
+                :class="['w-full sm:w-1/3 border-r border-white/10 flex flex-col bg-black/40 absolute sm:relative h-full z-20 transition-transform duration-300', showSidebar ? 'translate-x-0' : '-translate-x-full sm:translate-x-0']">
                 <div class="p-4 border-b border-white/10 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div
@@ -21,72 +22,105 @@
                         <span class="text-white font-semibold font-mono text-sm">Chats</span>
                     </div>
                 </div>
-                <div class="flex-1 overflow-y-auto custom-scrollbar p-2">
+                <div class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
                     <!-- Contact Item -->
-                    <div class="p-3 rounded-lg bg-white/10 cursor-pointer flex items-center gap-3 relative">
+                    <div v-for="chat in chats" :key="chat.id" @click="selectChat(chat.id)"
+                        :class="['p-3 rounded-lg cursor-pointer flex items-center gap-3 relative transition-colors', activeChatId === chat.id ? 'bg-white/10' : 'hover:bg-white/5']">
                         <div
-                            class="w-12 h-12 rounded-full overflow-hidden bg-nebula-cyan/20 border border-nebula-cyan/50 flex items-center justify-center">
-                            <BookOpen class="w-6 h-6 text-nebula-cyan" />
+                            :class="['w-12 h-12 rounded-full overflow-hidden border flex items-center justify-center shrink-0', chat.avatarColor]">
+                            <component :is="getIcon(chat.avatar)" class="w-6 h-6" />
                         </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center">
-                                <h4 class="text-white font-medium text-sm">Profesor</h4>
-                                <span class="text-[10px] text-white/50">10:45 AM</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-1">
+                                <h4 class="text-white font-medium text-sm truncate">{{ chat.name }}</h4>
+                                <span class="text-[10px] text-white/50 shrink-0">{{ chat.messages[chat.messages.length -
+                                    1]?.time }}</span>
                             </div>
-                            <p class="text-xs text-white/70 truncate">Ingresa a este link...</p>
+                            <p class="text-xs text-white/70 truncate">
+                                <span v-if="chat.type === 'group'" class="font-medium mr-1">{{
+                                    chat.messages[chat.messages.length - 1]?.sender }}:</span>
+                                {{ chat.messages[chat.messages.length - 1]?.content }}
+                            </p>
                         </div>
-                        <div class="w-2 h-2 rounded-full bg-nebula-cyan absolute right-4"></div>
+                        <div v-if="chat.id === '11b'"
+                            class="w-2 h-2 rounded-full bg-nebula-cyan absolute right-4 shadow-[0_0_8px_rgba(0,242,255,0.8)]">
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Chat Area -->
-            <div class="flex-1 flex flex-col relative bg-nebula-dark/40 overflow-hidden">
+            <div class="flex-1 flex flex-col relative bg-nebula-dark/60 overflow-hidden w-full h-full">
                 <!-- Chat Header -->
-                <div class="p-4 border-b border-white/10 bg-black/20 flex items-center gap-3 backdrop-blur-md z-10">
+                <div
+                    class="p-3 sm:p-4 border-b border-white/10 bg-black/20 flex items-center gap-3 backdrop-blur-md z-10 shrink-0">
+                    <button class="sm:hidden text-white/70 hover:text-white mr-1 p-2 bg-white/5 rounded-full"
+                        @click="showSidebar = true">
+                        <ArrowLeft class="w-5 h-5" />
+                    </button>
                     <div
-                        class="w-10 h-10 rounded-full overflow-hidden bg-nebula-cyan/20 border border-nebula-cyan/50 flex items-center justify-center">
-                        <BookOpen class="w-5 h-5 text-nebula-cyan" />
+                        :class="['w-10 h-10 rounded-full overflow-hidden border flex items-center justify-center shrink-0', activeChat?.avatarColor]">
+                        <component :is="getIcon(activeChat?.avatar)" class="w-5 h-5" />
                     </div>
-                    <div>
-                        <h3 class="text-white font-medium">Profesor</h3>
-                        <p class="text-[10px] text-nebula-cyan">en línea</p>
+                    <div class="min-w-0">
+                        <h3 class="text-white font-medium truncate">{{ activeChat?.name }}</h3>
+                        <p class="text-[10px] text-nebula-cyan truncate">
+                            {{ activeChat?.type === 'group' ? 'Varios participantes' : 'en línea' }}
+                        </p>
                     </div>
                 </div>
 
                 <!-- Chat Messages -->
-                <div class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
-                    <div class="flex justify-start">
-                        <div
-                            class="bg-slate-800/80 backdrop-blur-md rounded-2xl rounded-tl-none p-4 max-w-[80%] border border-slate-700/50 shadow-lg relative">
-                            <p class="text-sm text-slate-200 leading-relaxed font-sans">
-                                ¡Hola {{ store.user.fullName }}! <br /><br />
-                                Espero que estés muy bien. Por favor, ingresa a este enlace para realizar tu examen de
-                                nivelación de inglés:
+                <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar bg-chat-pattern">
+                    <div v-for="msg in activeChat?.messages" :key="msg.id"
+                        :class="['flex w-full', msg.isMe ? 'justify-end' : 'justify-start']">
+                        <div :class="[
+                            'p-3 sm:p-4 max-w-[85%] shadow-lg relative backdrop-blur-md border transition-all duration-300',
+                            msg.isMe
+                                ? 'bg-nebula-primary/20 border-nebula-primary/30 rounded-2xl rounded-tr-none text-right'
+                                : 'bg-slate-800/80 border-slate-700/50 rounded-2xl rounded-tl-none text-left'
+                        ]">
+                            <!-- Sender name only for groups and not for 'me' -->
+                            <p v-if="activeChat?.type === 'group' && !msg.isMe"
+                                :class="['text-[11px] font-bold mb-1', msg.senderColor]">{{ msg.sender }}</p>
+
+                            <p
+                                :class="['text-sm leading-relaxed font-sans whitespace-pre-line', msg.isMe ? 'text-white' : 'text-slate-200']">
+                                {{ msg.content }}
                             </p>
-                            <div class="mt-3 p-3 bg-black/40 rounded-xl border border-nebula-cyan/20 flex items-center gap-3 cursor-pointer hover:bg-black/60 transition-colors group"
+
+                            <!-- Custom interactive link block for the exam link -->
+                            <div v-if="msg.link"
+                                class="mt-3 p-2 sm:p-3 bg-black/40 rounded-xl border border-nebula-cyan/20 flex items-center gap-3 cursor-pointer hover:bg-black/60 transition-colors group text-left"
                                 @click="openExam">
                                 <div
-                                    class="p-2 bg-nebula-cyan/10 rounded-lg group-hover:bg-nebula-cyan/20 transition-colors">
+                                    class="p-2 bg-nebula-cyan/10 rounded-lg group-hover:bg-nebula-cyan/20 transition-colors shrink-0">
                                     <LinkIcon class="w-5 h-5 text-nebula-cyan" />
                                 </div>
-                                <div>
-                                    <p class="text-xs font-mono text-nebula-cyan font-bold">http://exam.local/level1</p>
+                                <div class="min-w-0">
+                                    <p class="text-xs font-mono text-nebula-cyan font-bold truncate">
+                                        http://exam.local/level1</p>
                                     <p class="text-[10px] text-white/40">Click para abrir</p>
                                 </div>
                             </div>
-                            <span class="text-[9px] text-white/30 absolute bottom-2 right-4">10:45 AM</span>
+
+                            <!-- Time stamp -->
+                            <span
+                                :class="['text-[9px] block mt-1', msg.isMe ? 'text-white/40 text-left' : 'text-white/30 text-right']">
+                                {{ msg.time }}
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Input Area -->
-                <div class="p-4 bg-black/30 border-t border-white/10 backdrop-blur-md shrink-0">
-                    <div class="flex items-center gap-3 bg-black/40 rounded-full px-4 py-2 border border-white/10">
-                        <Smile class="w-5 h-5 text-white/50" />
-                        <input type="text" placeholder="Escribe un mensaje..." disabled
-                            class="flex-1 bg-transparent border-none outline-none text-white text-sm placeholder-white/30 cursor-not-allowed" />
-                        <Send class="w-5 h-5 text-white/50" />
+                <!-- Input Area (Read Only) -->
+                <div class="p-3 sm:p-4 bg-black/30 border-t border-white/10 backdrop-blur-md shrink-0 z-10">
+                    <div
+                        class="flex items-center gap-3 bg-black/40 rounded-full px-4 py-2 sm:py-3 border border-white/10 opacity-60">
+                        <Smile class="w-5 h-5 text-white/30 shrink-0" />
+                        <input type="text" placeholder="Solo lectura en modo examen" disabled
+                            class="flex-1 bg-transparent border-none outline-none text-white/50 text-xs sm:text-sm placeholder-white/30 cursor-not-allowed text-center sm:text-left min-w-0" />
+                        <Send class="w-5 h-5 text-white/30 shrink-0" />
                     </div>
                 </div>
             </div>
@@ -95,12 +129,83 @@
 </template>
 
 <script setup>
-import { User, BookOpen, Link as LinkIcon, Smile, Send } from 'lucide-vue-next'
+import { computed, ref, onMounted } from 'vue'
+import { User, BookOpen, Link as LinkIcon, Smile, Send, Users, Terminal, Coffee, Heart, ArrowLeft, MessageSquare } from 'lucide-vue-next'
 import { useGameStore } from '@/stores/useGameStore'
+import { getHistoryChats } from '~/constant/historyChat';
+import GameWindowControls from './WindowControls.vue'
 
 const store = useGameStore()
+
+// Map icons
+const icons = {
+    User, BookOpen, Users, Terminal, Coffee, Heart, MessageSquare
+}
+
+const getIcon = (name) => {
+    return icons[name] || User
+}
 
 const openExam = () => {
     store.openApp('browser')
 }
+
+// State
+const activeChatId = ref('11b')
+const showSidebar = ref(true)
+
+// Automatically show sidebar on large screens, hide on small screens
+onMounted(() => {
+    if (window.innerWidth < 640) {
+        showSidebar.value = true // Show by default initially on mobile too, or false depending on preference. Let's set it to true so they see the list.
+    }
+})
+const chats = computed(() => getHistoryChats(store.user.fullName))
+
+const activeChat = computed(() => chats.value.find(c => c.id === activeChatId.value))
+
+const selectChat = (id) => {
+    activeChatId.value = id
+    // Hide sidebar on mobile when a chat is selected
+    if (window.innerWidth < 640) {
+        showSidebar.value = false
+    }
+}
 </script>
+
+<style scoped>
+.bg-chat-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: center;
+}
+
+.custom-scrollbar-excel::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar-excel::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+.custom-scrollbar-excel::-webkit-scrollbar-thumb {
+    background: #222;
+    border-radius: 10px;
+    border: none;
+}
+
+/* Base scrollbar for other views */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.3);
+    border-radius: 10px;
+}
+</style>

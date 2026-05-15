@@ -109,6 +109,11 @@ import { storeToRefs } from 'pinia'
 import { Sparkles, RotateCcw, Send } from 'lucide-vue-next'
 import MarkdownIt from 'markdown-it'
 
+// ── Route Guard ──────────────────────────────────────────────────────────────
+definePageMeta({
+    middleware: ['chat-guard']
+})
+
 const inputMessage = ref('')
 const chatContainer = ref<HTMLElement | null>(null)
 const inputRef = ref<any>(null)

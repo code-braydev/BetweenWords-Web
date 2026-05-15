@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { SYSTEM_PROMPT } from "./SYSTEM_PROMPT";
+import { SYSTEM_PROMPT } from "../../../constants/SYSTEM_PROMPT";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);

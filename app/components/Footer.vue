@@ -10,9 +10,9 @@
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
 
       <div class="flex items-center gap-2 sm:gap-4 grayscale dark:grayscale-0 opacity-80 dark:opacity-100 transition-all">
-        <img src="/logoUniversity.png" alt="Universidad de Córdoba" class="h-12 w-auto" />
+        <img src="/images/logoUniversity.png" alt="Universidad de Córdoba" class="h-12 w-auto" />
         <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden md:block"></div>
-        <img src="/acreditacion.png" alt="Acreditación" class="h-12 w-auto" />
+        <img src="/images/acreditacion.png" alt="Acreditación" class="h-12 w-auto" />
       </div>
 
       <div class="text-center">

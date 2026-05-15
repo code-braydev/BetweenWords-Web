@@ -11,7 +11,7 @@
                         </div>
                         <div
                             class="relative w-24 h-24 rounded-full overflow-hidden bg-nebula-dark/50 border border-white/10">
-                            <img src="/avatar.jpg" class="w-full h-full object-cover" alt="User" />
+                            <img src="/images/avatar.jpg" class="w-full h-full object-cover" alt="User" />
                         </div>
                     </div>
 

@@ -49,6 +49,9 @@
             <!-- Registro de Estudiante / Settings -->
             <StudentModal :show="shouldShowModal" @registered="showSettingsModal = false"
                 @cancel="showSettingsModal = false" />
+                
+            <!-- Spotlight / System Menu -->
+            <SpotlightMenu />
         </ClientOnly>
     </div>
 </template>
@@ -79,7 +82,7 @@
 </style>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import StudentModal from '@/components/StudentModal.vue'
 
 const route = useRoute()
@@ -90,9 +93,23 @@ const showSettingsModal = ref(false)
 const isMounted = ref(false)
 onMounted(() => {
     isMounted.value = true
+    
+    // Initialize store state (restart timers, etc.)
+    store.startLockTimer()
+
     if (store.status.isPcUnlocked || route.path !== '/') {
         store.status.hasStarted = true
     }
+
+    window.addEventListener('open-settings', () => {
+        showSettingsModal.value = true
+    })
+})
+
+onUnmounted(() => {
+    window.removeEventListener('open-settings', () => {
+        showSettingsModal.value = true
+    })
 })
 
 watch(() => route.path, (newPath) => {
