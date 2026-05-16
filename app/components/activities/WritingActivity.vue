@@ -42,42 +42,37 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import nlp from 'compromise'
 import confetti from 'canvas-confetti'
 import { useGameStore } from '@/stores/useGameStore'
+import WRITE_ACTIVITIES from '@/constant/writeActivities'
 
 const store = useGameStore()
-
-const sentences = [
-  "I have visited Paris many times",
-  "She has finished her project already",
-  "We have lived here since 2010",
-  "They have lost their keys again",
-  "He has eaten all the cookies",
-  "The cat has caught a mouse",
-  "You have studied English for years",
-  "We have never been to Japan",
-  "She has bought a new car",
-  "I have lost my passport today",
-  "We have already eaten breakfast",
-  "She has never traveled by plane",
-  "He has written three books this year",
-  "They have known each other for years",
-  "It has rained all day long"
-]
+const sentences = WRITE_ACTIVITIES
 
 // Initialize arrays with empty values to avoid render errors
 const shuffledWords = ref(sentences.map(() => []))
 const userSentences = ref(sentences.map(() => []))
 const results = ref(sentences.map(() => null))
 
+let winAudio: HTMLAudioElement | null = null
+
 onMounted(() => {
   sentences.forEach((s, idx) => {
     const words = s.split(' ')
     shuffledWords.value[idx] = [...words].sort(() => Math.random() - 0.5)
   })
+  winAudio = new Audio('/audios/win.mp3')
+})
+
+onUnmounted(() => {
+  if (winAudio) {
+    winAudio.pause()
+    winAudio.src = ''
+    winAudio = null
+  }
 })
 
 const addWord = (sIdx, wIdx) => {
@@ -104,6 +99,12 @@ const checkSentence = (idx) => {
 
   if (docUser === docTarget) {
     results.value[idx] = 'correct'
+
+    if (winAudio) {
+      winAudio.currentTime = 0
+      winAudio.play().catch(e => console.error(e))
+    }
+
     confetti({
       particleCount: 100,
       spread: 70,

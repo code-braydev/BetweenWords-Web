@@ -76,10 +76,9 @@
                     class="flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-slate-400 dark:text-white/35">
                     <span>{{ q.audioUrl ? 'Escucha y escribe la respuesta' : 'Escribe la oración completa' }}</span>
                 </div>
-                <input v-model="textAnswers[idx]" type="text" :placeholder="q.placeholder || 'Escribe aquí...'"
-                    :disabled="submitted"
-                    class="w-full px-4 py-3 rounded-xl border bg-white dark:bg-black/40 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none focus:border-nebula-primary/50 transition-colors" />
-                <p v-if="submitted" class="text-xs text-slate-500 dark:text-white/50">
+                <UiInput v-model="textAnswers[idx]" type="text" :placeholder="q.placeholder || 'Escribe aquí...'"
+                    :disabled="submitted" />
+                <p v-if="submitted" class="text-xs mt-2 text-slate-500 dark:text-white/50">
                     Respuesta esperada:
                     <span class="font-bold text-nebula-cyan">{{ q.acceptedAnswers?.[0] ?? '—' }}</span>
                 </p>
@@ -116,16 +115,14 @@
 
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <UiButton label="VER NOTA EN EXCEL" variant="primary" size="lg" @click="openExam" />
-                <UiButton label="REINTENTAR" variant="ghost" size="lg" @click="resetQuiz" />
+            <UiButton label="REINTENTAR" variant="ghost" size="lg" @click="resetQuiz" />
             </div>
         </div>
-        <StudentModal :show="showStudentModal" @registered="handleStudentRegistered"
-            @cancel="showStudentModal = false" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 import { questions, TOTAL_QUESTIONS } from "~/constant/answer";
 import { Volume2 } from "lucide-vue-next";
 import * as confetti from 'canvas-confetti';
@@ -144,7 +141,20 @@ const results = ref<(string | null)[]>(new Array(TOTAL_QUESTIONS).fill(null));
 const submitted = ref(false);
 const viewMode = ref<"review" | "grade">("review");
 const finalGrade = ref<number | null>(null);
-const showStudentModal = ref(false);
+
+let winAudio: HTMLAudioElement | null = null;
+
+onMounted(() => {
+    winAudio = new Audio('/audio/win.mp3');
+});
+
+onUnmounted(() => {
+    if (winAudio) {
+        winAudio.pause();
+        winAudio.src = '';
+        winAudio = null;
+    }
+});
 
 // ── Computed ─────────────────────────────────────────────────────────────────
 
@@ -188,11 +198,6 @@ const isCorrect = (idx: number): boolean => {
 // ── Acciones ──────────────────────────────────────────────────────────────────
 
 const submitExam = async () => {
-    if (!store.user.fullName) {
-        showStudentModal.value = true;
-        return;
-    }
-
     let correctCountLocal = 0;
     for (let idx = 0; idx < questions.length; idx++) {
         const correct = isCorrect(idx);
@@ -231,6 +236,10 @@ const submitExam = async () => {
     }
 
     if (scaled >= 4.0) {
+        if (winAudio) {
+            winAudio.currentTime = 0;
+            winAudio.play().catch(e => console.error(e));
+        }
         confetti.default({ particleCount: 200, spread: 120, origin: { y: 0.5 } });
     }
 };
@@ -280,10 +289,5 @@ const resetQuiz = () => {
     submitted.value = false;
     viewMode.value = 'review';
     finalGrade.value = null;
-};
-
-const handleStudentRegistered = () => {
-    showStudentModal.value = false;
-    submitExam();
 };
 </script>

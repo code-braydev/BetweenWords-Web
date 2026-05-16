@@ -1,5 +1,8 @@
 // Data Structure
-export const getHistoryChats = (fullName: string) => [
+export const getHistoryChats = (fullName: string) => {
+  const firstName = fullName ? fullName.trim().split(' ')[0] : 'Estudiante';
+  
+  return [
   {
     id: "11b",
     name: "11°B - Oficial",
@@ -88,7 +91,7 @@ export const getHistoryChats = (fullName: string) => [
         id: 12,
         sender: "Profesor",
         senderColor: "text-nebula-cyan",
-        content: `¡Hola ${fullName || "Estudiante"}! Por favor, ingresa a este enlace para realizar tu examen de inglés:`,
+        content: `¡Hola ${firstName}! Por favor, ingresa a este enlace para realizar tu examen de inglés:`,
         link: true,
         time: "10:45 AM",
       },
@@ -991,3 +994,4 @@ export const getHistoryChats = (fullName: string) => [
     ],
   },
 ];
+};

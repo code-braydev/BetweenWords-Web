@@ -8,7 +8,8 @@ export default defineNuxtRouteMiddleware((to) => {
     // On the client side, also check the Pinia store
     if (import.meta.client) {
         const store = useGameStore()
-        if (store.status.isPcUnlocked) return
+        // Allow if session is active (student identified) or PC is already unlocked
+        if (store.status.sessionActive || store.status.isPcUnlocked) return
 
         // No session and no active game — block access
         return navigateTo({

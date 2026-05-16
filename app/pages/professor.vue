@@ -46,47 +46,15 @@
             <form @submit.prevent="createSession" class="space-y-8">
               <!-- Basic Info Grid -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2">
-                  <label class="text-xs font-bold uppercase tracking-widest text-white/40 ml-1">Institución</label>
-                  <input v-model="form.institution" required type="text" placeholder="Ej. Colegio San José"
-                    class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-nebula-primary/50 transition-colors" />
-                </div>
-                <div class="space-y-2">
-                  <label class="text-xs font-bold uppercase tracking-widest text-white/40 ml-1">Grado / Nivel</label>
-                  <input v-model="form.grade" required type="text" placeholder="Ej. 11°"
-                    class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-nebula-primary/50 transition-colors" />
-                </div>
-                <div class="space-y-2">
-                  <label class="text-xs font-bold uppercase tracking-widest text-white/40 ml-1">Curso / Grupo</label>
-                  <input v-model="form.course" required type="text" placeholder="Ej. Grupo B"
-                    class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-nebula-primary/50 transition-colors" />
-                </div>
-                <div class="space-y-2">
-                  <label class="text-xs font-bold uppercase tracking-widest text-white/40 ml-1">Duración</label>
-                  <select v-model="form.duration"
-                    class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-nebula-primary/50 transition-colors appearance-none cursor-pointer">
-                    <option value="1">1 Día</option>
-                    <option value="7">1 Semana</option>
-                    <option value="15">15 Días</option>
-                    <option value="30">1 Mes</option>
-                  </select>
-                </div>
+                <UiInput v-model="form.institution" label="Institución" placeholder="Ej. Colegio San José" :glass="true" />
+                <UiInput v-model="form.grade" label="Grado / Nivel" placeholder="Ej. 11°" :glass="true" />
+                <UiInput v-model="form.course" label="Curso / Grupo" placeholder="Ej. Grupo B" :glass="true" />
+                <UiSelect v-model="form.duration" label="Duración" placeholder="Selecciona..." :options="durationOptions" :glass="true" />
               </div>
 
               <!-- Sheet URL -->
               <div class="space-y-4">
-                <div class="space-y-2">
-                  <label class="text-xs font-bold uppercase tracking-widest text-white/40 ml-1 flex items-center gap-2">
-                    Google Sheet URL
-                    <span class="text-[10px] lowercase font-normal opacity-60">(Vínculo de tu hoja de cálculo)</span>
-                  </label>
-                  <div class="relative">
-                    <input v-model="form.sheetUrl" required type="url"
-                      placeholder="https://docs.google.com/spreadsheets/d/..."
-                      class="w-full bg-black/40 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-nebula-cyan/50 transition-colors" />
-                    <LinkIcon class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20" />
-                  </div>
-                </div>
+                <UiInput v-model="form.sheetUrl" type="url" :icon="LinkIcon" label="Google Sheet URL" placeholder="https://docs.google.com/spreadsheets/d/..." :glass="true" />
                 <!-- Warning Note -->
                 <p class="text-[9px] font-black uppercase tracking-[0.15em] text-nebula-cyan/70 bg-nebula-cyan/5 border border-nebula-cyan/10 p-3 rounded-lg flex items-center gap-2">
                   <ShieldAlert class="w-3.5 h-3.5" />
@@ -95,13 +63,7 @@
               </div>
 
               <!-- Submit Button -->
-              <button type="submit" :disabled="loading"
-                class="w-full bg-gradient-to-r from-nebula-primary to-nebula-cyan py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:shadow-[0_0_30px_rgba(245,44,245,0.4)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500">
-                <span v-if="loading" class="flex items-center justify-center gap-2">
-                  <Loader2 class="w-4 h-4 animate-spin" /> Creando...
-                </span>
-                <span v-else>Generar Sesión de Aprendizaje</span>
-              </button>
+              <UiButton type="submit" variant="primary" size="lg" :loading="loading" :disabled="loading || !isFormValid" label="Generar Sesión de Aprendizaje" class="w-full" />
             </form>
           </div>
 
@@ -129,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { 
   Users, Link as LinkIcon, Loader2, ArrowLeft, 
   HelpCircle, ShieldAlert 
@@ -140,12 +102,26 @@ const sessionCreated = ref(false);
 const generatedUrl = ref('');
 const showGuide = ref(false);
 
+const durationOptions = [
+  { label: '1 Día', value: '1' },
+  { label: '1 Semana', value: '7' },
+  { label: '15 Días', value: '15' },
+  { label: '1 Mes', value: '30' }
+];
+
 const form = reactive({
   institution: '',
   grade: '',
   course: '',
   duration: '1',
   sheetUrl: ''
+});
+
+const isFormValid = computed(() => {
+  return form.institution.trim() !== '' && 
+         form.grade.trim() !== '' && 
+         form.course.trim() !== '' && 
+         form.sheetUrl.trim() !== '';
 });
 
 const createSession = async () => {

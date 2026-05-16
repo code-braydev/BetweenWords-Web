@@ -12,7 +12,8 @@
           <span v-if="results[idx] === 'perfect'" class="text-xs text-emerald-500 font-bold">✅ Good pronunciation</span>
           <span v-else-if="results[idx] === 'low'" class="text-xs text-red-500 font-bold">❌ Repeat the
             pronunciation</span>
-          <span v-else-if="isRecording && currentIdx === idx" class="text-[9px] text-slate-400 font-mono uppercase">
+          <span v-else-if="isRecording && activeRecordingIdx === idx"
+            class="text-[9px] text-slate-400 font-mono uppercase">
             {{ debugStatus }}
           </span>
         </div>
@@ -27,48 +28,62 @@
             <Volume2 class="w-5 h-5" />
           </button>
 
-          <button @click.stop.prevent="handleToggle(idx)" :disabled="results[idx] === 'perfect' || isProcessing"
-            class="w-16 h-16 rounded-full flex items-center justify-center transition-all relative"
-            :class="isRecording && currentIdx === idx
-              ? 'bg-red-500 scale-110 shadow-[0_0_20px_rgba(239,68,68,0.5)]'
-              : 'bg-nebula-primary text-white shadow-lg shadow-nebula-primary/20 hover:scale-105 active:scale-95 disabled:opacity-30'">
+          <button @click.stop.prevent="handleToggle(idx)" :disabled="(isProcessing && activeRecordingIdx === idx) || results[idx] === 'perfect'"
+            class="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 relative group"
+            :class="[
+              // State 0: Idle
+              !isRecording && !isProcessing && results[idx] === null ? 'bg-nebula-primary shadow-neon-fuchsia hover:scale-110' : '',
+              
+              // State 1: Recording
+              isRecording && activeRecordingIdx === idx ? 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.6)] scale-110' : '',
+              
+              // State 2: Processing
+              isProcessing && activeRecordingIdx === idx ? 'bg-slate-600 cursor-wait opacity-80' : '',
+              
+              // State 3: Feedback
+              results[idx] === 'perfect' ? 'bg-emerald-500 shadow-neon-cyan' : '',
+              results[idx] === 'low' && activeRecordingIdx === idx && !isRecording && !isProcessing ? 'bg-amber-500' : ''
+            ]">
 
-            <template v-if="isProcessing && currentIdx === idx">
-              <!-- Spinner while processing -->
-              <svg class="w-6 h-6 animate-spin text-white" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                <path class="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
+            <!-- State Icons -->
+            <template v-if="isProcessing && activeRecordingIdx === idx">
+              <Loader2 class="w-6 h-6 animate-spin text-white" />
+            </template>
+            <template v-else-if="isRecording && activeRecordingIdx === idx">
+              <Square class="w-6 h-6 text-white animate-pulse" />
+            </template>
+            <template v-else-if="results[idx] === 'perfect'">
+              <Check class="w-8 h-8 text-white" />
             </template>
             <template v-else>
-              <Mic v-if="!(isRecording && currentIdx === idx)" class="w-8 h-8" />
-              <Square v-else class="w-6 h-6 animate-pulse" />
+              <Mic class="w-7 h-7 text-white" :class="{ 'animate-bounce': !isRecording && !results[idx] }" />
             </template>
 
-            <div v-if="isRecording && currentIdx === idx"
-              class="absolute -inset-2 border-2 border-red-500 rounded-full animate-ping opacity-20" />
+            <!-- Pulse Effect for Idle -->
+            <div v-if="!isRecording && !isProcessing && results[idx] === null"
+              class="absolute -inset-1 border border-nebula-primary rounded-full animate-ping opacity-30" />
+              
+            <!-- Pulse Effect for Recording -->
+            <div v-if="isRecording && activeRecordingIdx === idx"
+              class="absolute -inset-2 border-2 border-red-500 rounded-full animate-ping opacity-40" />
           </button>
         </div>
 
         <!-- Error feedback -->
-        <p v-if="micError && currentIdx === idx" class="text-[11px] text-red-400 font-medium">{{ micError }}</p>
+        <p v-if="micError && activeRecordingIdx === idx" class="text-[11px] text-red-400 font-medium">{{ micError }}</p>
 
-        <div v-if="transcripts[idx] || (isRecording && currentIdx === idx)"
+        <div v-if="transcripts[idx] || (isRecording && activeRecordingIdx === idx)"
           class="mt-4 p-3 bg-white/50 dark:bg-black/20 rounded-lg border border-slate-200 dark:border-white/5 w-full max-w-sm">
           <div class="flex justify-between items-center mb-1">
             <p class="text-[10px] text-slate-400 uppercase tracking-widest">Tu pronunciación:</p>
-            <span v-if="isRecording && currentIdx === idx"
+            <span v-if="isRecording && activeRecordingIdx === idx"
               class="text-[9px] text-nebula-cyan animate-pulse font-black uppercase">Escuchando...</span>
-            <span v-else-if="isProcessing && currentIdx === idx"
+            <span v-else-if="isProcessing && activeRecordingIdx === idx"
               class="text-[9px] text-yellow-400 animate-pulse font-black uppercase">Procesando...</span>
           </div>
           <p class="text-sm font-mono italic">"{{ transcripts[idx] || '...' }}"</p>
 
-          <div class="mt-2 h-1.5 w-full bg-slate-200 dark:bg-white/5 rounded-full overflow-hidden">
-            <div class="h-full bg-nebula-primary transition-all duration-500" :style="{ width: `${speechScores[idx]}%` }" />
-          </div>
-          <p class="text-[10px] mt-1 text-right font-bold text-nebula-primary">{{ speechScores[idx] }}% Similitud</p>
+          <ProgressBar :progress="speechScores[idx] || 0" label="Similitud" />
         </div>
       </div>
     </div>
@@ -76,72 +91,94 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { Mic, Square, Volume2 } from 'lucide-vue-next'
-
-interface Sentence {
-  text: string
-  audio: string
-  keyword: string[]
-}
+import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { Mic, Square, Volume2, Loader2, Check } from 'lucide-vue-next'
+import ProgressBar from '@/components/ui/ProgressBar.vue'
+import SPEAK_ACTIVITIES from '@/constant/speakActivities'
+import confetti from 'canvas-confetti'
 
 type ResultStatus = 'perfect' | 'low' | null
 
-const sentences: Sentence[] = [
-  { text: 'I have traveled to many countries', audio: '/audios/speaking-1.mp3', keyword: ['have', 'traveled'] },
-  { text: 'She has worked in this company for five years', audio: '/audios/speaking-2.mp3', keyword: ['has', 'worked'] },
-  { text: 'We have seen that movie twice already', audio: '/audios/speaking-3.mp3', keyword: ['have', 'seen'] },
-  { text: 'He has just finished his homework', audio: '/audios/speaking-4.mp3', keyword: ['has', 'finished'] },
-  { text: 'They have lived in London since last year', audio: '/audios/speaking-5.mp3', keyword: ['have', 'lived'] },
-  { text: 'I have already seen that movie', audio: '/audios/speaking-6.mp3', keyword: ['have', 'seen'] },
-  { text: 'She has never visited New York', audio: '/audios/speaking-7.mp3', keyword: ['has', 'visited'] },
-  { text: 'We have finished our homework', audio: '/audios/speaking-8.mp3', keyword: ['have', 'finished'] },
-  { text: 'He has lost his mobile phone', audio: '/audios/speaking-9.mp3', keyword: ['has', 'lost'] },
-  { text: 'You have done a great job', audio: '/audios/speaking-10.mp3', keyword: ['have', 'done'] },
-]
+const sentences = SPEAK_ACTIVITIES
 
 const store = useGameStore()
 const {
-  transcripts,
-  scores: speechScores,  // Use scores from useSpeech directly
   isRecording,
   isProcessing,
-  currentIdx,
+  transcript,
+  attemptsLeft,
   micError,
-  clearError,
-  toggleRecord: voiceToggle,
-} = useSpeech(sentences.length, {
-  isExam: false,
-  getExpectedText: (idx: number) => sentences[idx]?.text,
-  getExpectedKeywords: (idx: number) => sentences[idx]?.keyword,
-})
+  startRecording,
+  stopRecording
+} = useSpeech()
 
+const transcripts = ref<string[]>(sentences.map(() => ''))
+const speechScores = ref<number[]>(sentences.map(() => 0))
 const results = ref<ResultStatus[]>(sentences.map(() => null))
 const debugStatus = ref('Ready')
 const activeRecordingIdx = ref<number | null>(null)
 
+let winAudio: HTMLAudioElement | null = null
+
+onMounted(() => {
+  winAudio = new Audio('/audios/win.mp3')
+})
+
+onUnmounted(() => {
+  if (winAudio) {
+    winAudio.pause()
+    winAudio.src = ''
+    winAudio = null
+  }
+})
+
+const calculateScore = (spoken: string, expected: string, keywords: string[]) => {
+  if (!spoken) return 0
+  const normalize = (text: string) => text.toLowerCase().replace(/[.,!?]/g, '').trim()
+  const sText = normalize(spoken)
+  const eText = normalize(expected)
+
+  if (sText === eText) return 100
+
+  const wordsSpoken = sText.split(' ')
+  let matchedKeywords = 0
+  for (const kw of keywords) {
+    if (wordsSpoken.includes(kw.toLowerCase())) {
+      matchedKeywords++
+    }
+  }
+
+  const keywordScore = keywords.length > 0 ? (matchedKeywords / keywords.length) * 100 : 0
+
+  if (keywordScore === 100) return 90
+  if (keywordScore > 0) return 60
+  return sText.length > 0 ? 30 : 0
+}
+
 // ── Procesamiento de Resultados ─────────────────────────────────────────
 const processFinalResult = (idx: number) => {
-  const transcript = transcripts.value[idx]
+  const t = transcripts.value[idx]
   const score = speechScores.value[idx] ?? 0
 
-  if (!transcript || transcript.trim() === '') {
+  if (!t || t.trim() === '') {
     debugStatus.value = 'No speech detected'
     return
   }
 
-  // Use the score already computed by useSpeech (handles both native and upload modes)
   if (score >= 85) {
     results.value[idx] = 'perfect'
     debugStatus.value = 'Excellent!'
 
-    import('canvas-confetti').then((confetti) => {
-      confetti.default({
-        particleCount: 150,
-        spread: 100,
-        origin: { y: 0.6 },
-        colors: ['#f52cf5', '#00f2ff']
-      })
+    if (winAudio) {
+      winAudio.currentTime = 0
+      winAudio.play().catch(e => console.error('Audio play error:', e))
+    }
+
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors: ['#f52cf5', '#00f2ff']
     })
 
     if (store?.academic) store.academic.completedExercises++
@@ -153,61 +190,45 @@ const processFinalResult = (idx: number) => {
 
 // ── Control de Grabación ────────────────────────────────────────────────
 const handleToggle = async (idx: number) => {
-  // If already recording this index, stop it
-  if (isRecording.value && currentIdx.value === idx) {
-    await voiceToggle(idx)
+  if (isRecording.value && activeRecordingIdx.value === idx) {
+    stopRecording()
     return
   }
 
-  // If recording a different index, stop it first
-  if (isRecording.value && currentIdx.value !== null && currentIdx.value !== idx) {
-    await voiceToggle(currentIdx.value)
+  if (isRecording.value && activeRecordingIdx.value !== null && activeRecordingIdx.value !== idx) {
+    stopRecording()
   }
 
-  // Reset state for this index
   activeRecordingIdx.value = idx
   transcripts.value[idx] = ''
   results.value[idx] = null
   speechScores.value[idx] = 0
   debugStatus.value = 'Listening...'
-  clearError()
 
-  await voiceToggle(idx)
+  await startRecording()
 }
 
-// ── Watcher: process result when recording stops ────────────────────────
-// Watch both isRecording and isProcessing to handle both native and upload modes
-watch([isRecording, isProcessing], ([nowRecording, nowProcessing], [wasRecording, wasProcessing]) => {
-  // Trigger when recording just stopped
-  if (!nowRecording && wasRecording && activeRecordingIdx.value !== null) {
-    if (micError.value) return
-    debugStatus.value = 'Processing...'
-  }
-
-  // Trigger when processing just finished (upload mode finishes here)
+// ── Watchers ────────────────────────────────────────────────────────────
+watch(isProcessing, (nowProcessing, wasProcessing) => {
   if (!nowProcessing && wasProcessing && activeRecordingIdx.value !== null) {
     if (micError.value) return
-    // Small delay to ensure reactive refs have settled
-    setTimeout(() => {
-      processFinalResult(activeRecordingIdx.value!)
-    }, 100)
-  }
 
-  // Native mode: processing is not used, so trigger when recording stops with a transcript
-  if (!nowRecording && wasRecording && !nowProcessing && activeRecordingIdx.value !== null) {
-    if (micError.value) return
-    setTimeout(() => {
-      // Only process if it hasn't been triggered by the processing watcher
-      if (results.value[activeRecordingIdx.value!] === null && transcripts.value[activeRecordingIdx.value!]) {
-        processFinalResult(activeRecordingIdx.value!)
-      }
-    }, 300)
+    const idx = activeRecordingIdx.value
+    transcripts.value[idx] = transcript.value || ''
+
+    const expectedText = sentences[idx]?.text || ''
+    const expectedKeywords = sentences[idx]?.keyword || []
+    speechScores.value[idx] = calculateScore(transcripts.value[idx], expectedText, expectedKeywords)
+
+    processFinalResult(idx)
   }
 })
 
-watch(micError, (errorText) => {
-  if (errorText) {
-    debugStatus.value = errorText
+watch(isRecording, (nowRecording) => {
+  if (nowRecording) {
+    debugStatus.value = `Listening... (${attemptsLeft.value} attempts left)`
+  } else if (isProcessing.value) {
+    debugStatus.value = 'Processing...'
   }
 })
 

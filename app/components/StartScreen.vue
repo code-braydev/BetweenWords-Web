@@ -47,7 +47,7 @@
             <button @click="handleStart" v-motion :initial="{ scale: 0, opacity: 0 }"
                 :enter="{ scale: 1, opacity: 1, transition: { duration: 1200, delay: 500, type: 'spring', bounce: 0.4 } }"
                 :hovered="{ scale: 1.05 }" :tapped="{ scale: 0.95 }"
-                class="relative group mb-12 sm:mb-32 z-20 cursor-pointer">
+                class="relative group mb-6 sm:mb-12 z-20 cursor-pointer">
 
                 <!-- Sonar Rings -->
                 <div class="absolute -inset-4 bg-nebula-cyan/5 rounded-full animate-[ping_4s_infinite]"></div>
@@ -67,6 +67,16 @@
                         class="w-10 h-10 sm:w-20 sm:h-20 text-white/80 ml-2 sm:ml-3 group-hover:text-white transition-all duration-700" />
                 </div>
             </button>
+
+            <!-- F11 Recommendation -->
+            <div v-motion :initial="{ opacity: 0, y: 20 }"
+                :enter="{ opacity: 1, y: 0, transition: { duration: 800, delay: 900 } }"
+                class="z-10 mb-8 sm:mb-16 flex items-center gap-2 px-4 py-2 bg-white/[0.03] backdrop-blur-sm border border-white/5 rounded-full">
+                <Maximize2 class="w-3.5 h-3.5 text-nebula-cyan/70" />
+                <p class="text-[9px] sm:text-[10px] text-white/40 font-mono uppercase tracking-widest">
+                    Presiona <span class="text-nebula-cyan font-bold">F11</span> para pantalla completa antes de iniciar
+                </p>
+            </div>
 
             <!-- Go to Learning Button -->
             <div v-motion :initial="{ opacity: 0, y: 30 }"
@@ -99,9 +109,12 @@ import {
     Play, GraduationCap, Sparkles, Star, Rocket, Zap,
     Orbit, Atom, Brain, Compass, Trophy, Wand2,
     Gamepad2, BookOpen, Microscope, Palette, Lightbulb,
-    Cpu, Globe, MessageSquare, Users
+    Cpu, Globe, MessageSquare, Users, Maximize2
 } from 'lucide-vue-next';
+import { useGameStore } from '@/stores/useGameStore';
 
+
+const emit = defineEmits(['start', 'identify', 'learning']);
 
 interface StarItem {
     id: number;
@@ -114,16 +127,22 @@ interface IconItem {
     style: any;
 }
 
-const emit = defineEmits(['start', 'learning']);
 const isEntering = ref(false);
 const stars = ref<StarItem[]>([]);
 const renderedIcons = ref<IconItem[]>([]);
 
+const store = useGameStore();
+
 const handleStart = () => {
-    if (isEntering.value) return; // Guard against double clicks
+    if (isEntering.value) return;
     isEntering.value = true;
+
     setTimeout(() => {
-        emit('start');
+        if (store.status.sessionActive) {
+            emit('start');
+        } else {
+            emit('identify');
+        }
     }, 800);
 };
 

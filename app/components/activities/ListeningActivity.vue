@@ -6,7 +6,7 @@
 
       <div class="flex items-center justify-between mb-4">
         <span class="text-[10px] font-black text-nebula-cyan uppercase tracking-widest">Listening Task {{ idx + 1
-          }}</span>
+        }}</span>
         <div v-if="results[idx]" class="flex items-center gap-2">
           <span v-if="results[idx] === 'correct'" class="text-xs text-emerald-500 font-bold">✅ Correct answer</span>
           <span v-else class="text-xs text-red-500 font-bold">❌ Incorrect answer</span>
@@ -36,55 +36,32 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import { Volume2 } from 'lucide-vue-next'
 import confetti from 'canvas-confetti'
 import { useGameStore } from '@/stores/useGameStore'
+import LISTEN_ACTIVITIES from '@/constant/listenActivities'
 
 const store = useGameStore()
-
-const questions = [
-  {
-    audioUrl: "/audios/listening-1.mp3",
-    question: "What did I do?",
-    options: ["Cooked dinner", "Cleaned the kitchen", "Slept"],
-    correct: "Cleaned the kitchen"
-  },
-  {
-    audioUrl: "/audios/listening-2.mp3",
-    question: "What did she lose?",
-    options: ["Her keys", "Her wallet", "Her phone"],
-    correct: "Her phone"
-  },
-  {
-    audioUrl: "/audios/listening-3.mp3",
-    question: "How long have they been married?",
-    options: ["Ten years", "Twenty years", "Fifty years"],
-    correct: "Twenty years"
-  },
-  {
-    audioUrl: "/audios/listening-4.mp3",
-    question: "Has he finished the book?",
-    options: ["Yes, just now", "No, not yet", "He is still reading"],
-    correct: "Yes, just now"
-  },
-  {
-    audioUrl: "/audios/listening-5.mp3",
-    question: "Where has she been?",
-    options: ["At work", "In Paris", "At home"],
-    correct: "In Paris"
-  },
-  {
-    audioUrl: "/audios/listening-6.mp3",
-    question: "How many times has he seen the movie?",
-    options: ["Once", "Twice", "Three times"],
-    correct: "Three times"
-  }
-]
+const questions = LISTEN_ACTIVITIES
 
 const selectedAnswers = ref(questions.map(() => null))
 const results = ref(questions.map(() => null))
+
+let winAudio: HTMLAudioElement | null = null
+
+onMounted(() => {
+  winAudio = new Audio('/audios/win.mp3')
+})
+
+onUnmounted(() => {
+  if (winAudio) {
+    winAudio.pause()
+    winAudio.src = ''
+    winAudio = null
+  }
+})
 
 const playAudio = (url) => {
   const audio = new Audio(url)
@@ -95,6 +72,12 @@ const selectOption = (idx, opt) => {
   selectedAnswers.value[idx] = opt
   if (opt === questions[idx].correct) {
     results.value[idx] = 'correct'
+    
+    if (winAudio) {
+      winAudio.currentTime = 0
+      winAudio.play().catch(e => console.error(e))
+    }
+
     confetti({
       particleCount: 80,
       spread: 50,

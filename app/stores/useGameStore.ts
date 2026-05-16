@@ -5,6 +5,7 @@ export const useGameStore = defineStore("game", {
     user: {
       nickname: "",
       fullName: "",
+      gradeGroup: "",
     },
 
     status: {
@@ -15,6 +16,8 @@ export const useGameStore = defineStore("game", {
       currentStep: "login",
       runningApps: [] as string[],
       hasStarted: false,
+      sessionActive: false,
+      guideSeen: false,
     },
 
     security: {
@@ -42,8 +45,15 @@ export const useGameStore = defineStore("game", {
   }),
 
   actions: {
-    login(nickname: string) {
-      this.user.nickname = nickname;
+    setIdentity(data: { fullName: string; nickname?: string; gradeGroup?: string }) {
+      this.user.fullName = data.fullName;
+      this.user.nickname = data.nickname || "Guest-User";
+      this.user.gradeGroup = data.gradeGroup || "N/A";
+      this.status.sessionActive = true;
+    },
+
+    markGuideAsSeen() {
+      this.status.guideSeen = true;
     },
 
     resetSecurity() {
@@ -92,8 +102,8 @@ export const useGameStore = defineStore("game", {
 
       if (this.security.attempts >= 3) {
         this.security.isLocked = true;
-        const lockCycle = (this.security.attempts - 3) % 3;
-        this.security.lockTime = (lockCycle + 1) * 5;
+        // Lock for 5 seconds as requested
+        this.security.lockTime = 5;
         this.startLockTimer();
       }
     },
@@ -145,8 +155,6 @@ export const useGameStore = defineStore("game", {
     },
 
     resetGame() {
-      // Reset everything except user nickname if desired,
-      // but usually for a new session we want a full reset.
       this.status.isPcUnlocked = false;
       this.status.isWhatsappUnlocked = false;
       this.status.isFileUnlocked = false;
@@ -163,14 +171,7 @@ export const useGameStore = defineStore("game", {
   },
 
   persist: {
-    key: "ova-state",
-    pick: ["user", "status", "security", "academic", "session"],
-    storage:
-      typeof localStorage !== "undefined"
-        ? localStorage
-        : {
-            getItem: (_: string) => null,
-            setItem: (_: string, __: string) => {},
-          },
+    key: "between-words-session",
+    storage: typeof window !== 'undefined' ? window.sessionStorage : undefined,
   },
 });

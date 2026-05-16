@@ -5,7 +5,8 @@
             <Transition enter-active-class="transition duration-1000 ease-out" enter-from-class="opacity-0 scale-95"
                 enter-to-class="opacity-100 scale-100" leave-active-class="transition duration-700 ease-in"
                 leave-from-class="opacity-100" leave-to-class="opacity-0 scale-110">
-                <StartScreen v-if="!store.status.hasStarted" @start="handleStart" @learning="goToLearning" />
+                <StartScreen v-if="!store.status.hasStarted" @start="handleStart" @identify="handleIdentify"
+                    @learning="goToLearning" />
             </Transition>
 
             <!-- Main Work Area (Sidebar + Apps) -->
@@ -15,7 +16,7 @@
             ]">
                 <!-- Sidebar -->
                 <Sidebar v-if="!isAppFullscreen" class="relative z-20" :glass="$route.path === '/'"
-                    @settings="showSettingsModal = !showSettingsModal" />
+                    @settings="showIdentityModal = !showIdentityModal" />
 
                 <!-- App Container -->
                 <main :class="[
@@ -44,12 +45,14 @@
 
             <!-- macOS Style Dock (Only on Desktop after login) -->
             <GameTaskbar v-if="store.status.isPcUnlocked && $route.path === '/' && !isAppFullscreen"
-                @settings="showSettingsModal = !showSettingsModal" />
+                @settings="showIdentityModal = !showIdentityModal" />
 
-            <!-- Registro de Estudiante / Settings -->
-            <StudentModal :show="shouldShowModal" @registered="showSettingsModal = false"
-                @cancel="showSettingsModal = false" />
-                
+            <!-- PROTOCOL_01: Student Identity Modal -->
+            <StudentModal :show="showIdentityModal" @registered="handleStudentRegistered" />
+
+            <!-- Onboarding Modal (shown once after fresh identity) -->
+            <OnboardingModal :show="showOnboarding" @close="handleOnboardingDone" />
+
             <!-- Spotlight / System Menu -->
             <SpotlightMenu />
         </ClientOnly>
@@ -81,19 +84,19 @@
 }
 </style>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import StudentModal from '@/components/StudentModal.vue'
 
 const route = useRoute()
 const store = useGameStore()
 
-const isUserInfoComplete = computed(() => store.user.fullName && store.user.grade && store.user.group)
-const showSettingsModal = ref(false)
+const showIdentityModal = ref(false)
+const showOnboarding = ref(false)
 const isMounted = ref(false)
+
 onMounted(() => {
     isMounted.value = true
-    
+
     // Initialize store state (restart timers, etc.)
     store.startLockTimer()
 
@@ -101,26 +104,21 @@ onMounted(() => {
         store.status.hasStarted = true
     }
 
-    window.addEventListener('open-settings', () => {
-        showSettingsModal.value = true
-    })
+    window.addEventListener('open-settings', handleOpenSettings)
 })
 
 onUnmounted(() => {
-    window.removeEventListener('open-settings', () => {
-        showSettingsModal.value = true
-    })
+    window.removeEventListener('open-settings', handleOpenSettings)
 })
+
+const handleOpenSettings = () => {
+    showIdentityModal.value = true
+}
 
 watch(() => route.path, (newPath) => {
     if (newPath !== '/') {
         store.status.hasStarted = true
     }
-})
-
-const shouldShowModal = computed(() => {
-    if (!isMounted.value) return false
-    return showSettingsModal.value
 })
 
 const isAppFullscreen = computed(() => route.path === '/' && store.status.isMaximized)
@@ -130,14 +128,36 @@ const goToLearning = () => {
     navigateTo('/learning')
 }
 
+// Called when StartScreen emits 'start' (session already active)
 const handleStart = () => {
     store.status.hasStarted = true
-    store.status.currentStep = 'login'
-    store.status.isPcUnlocked = false
-    store.status.isWhatsappUnlocked = false
-    store.status.isFileUnlocked = false
-    store.status.isMaximized = false
-    store.status.runningApps = []
-    store.resetSecurity()
+    
+    // Check if onboarding is needed (only if never seen in this session)
+    if (!store.status.guideSeen) {
+        showOnboarding.value = true
+    } else {
+        store.status.currentStep = 'login'
+        store.status.isPcUnlocked = false
+        store.resetSecurity()
+    }
+}
+
+// Called when StartScreen emits 'identify' (no session yet)
+const handleIdentify = () => {
+    showIdentityModal.value = true
+}
+
+// Called when StudentModal emits 'registered'
+const handleStudentRegistered = () => {
+    showIdentityModal.value = false
+    // Immediately show onboarding for new sessions
+    showOnboarding.value = true
+}
+
+// Called when OnboardingModal emits 'close'
+const handleOnboardingDone = () => {
+    showOnboarding.value = false
+    store.markGuideAsSeen()
+    handleStart()
 }
 </script>
