@@ -35,7 +35,7 @@
 
       <div class="mt-4 flex justify-end">
         <UiButton v-if="results[idx] !== 'correct'" label="CHECK" size="sm" variant="primary"
-          :disabled="userSentences[idx].length === 0" @click="checkSentence(idx)" />
+          :disabled="!userSentences[idx] || userSentences[idx]!.length === 0" @click="checkSentence(idx)" />
         <UiButton v-else label="RESET" size="sm" variant="subtle" @click="resetSentence(idx)" />
       </div>
     </div>
@@ -49,13 +49,15 @@ import confetti from 'canvas-confetti'
 import { useGameStore } from '@/stores/useGameStore'
 import WRITE_ACTIVITIES from '@/constant/writeActivities'
 
+type ResultStatus = 'correct' | 'incorrect' | null
+
 const store = useGameStore()
 const sentences = WRITE_ACTIVITIES
 
-// Initialize arrays with empty values to avoid render errors
-const shuffledWords = ref(sentences.map(() => []))
-const userSentences = ref(sentences.map(() => []))
-const results = ref(sentences.map(() => null))
+// Initialize arrays with proper typing
+const shuffledWords = ref<string[][]>(sentences.map(() => []))
+const userSentences = ref<string[][]>(sentences.map(() => []))
+const results = ref<ResultStatus[]>(sentences.map(() => null))
 
 let winAudio: HTMLAudioElement | null = null
 
@@ -75,27 +77,43 @@ onUnmounted(() => {
   }
 })
 
-const addWord = (sIdx, wIdx) => {
-  const word = shuffledWords.value[sIdx][wIdx]
-  userSentences.value[sIdx].push(word)
-  shuffledWords.value[sIdx].splice(wIdx, 1)
+const addWord = (sIdx: number, wIdx: number): void => {
+  const words = shuffledWords.value[sIdx]
+  const sentences_arr = userSentences.value[sIdx]
+  if (words && sentences_arr) {
+    const word = words[wIdx]
+    if (word) {
+      sentences_arr.push(word)
+      words.splice(wIdx, 1)
+    }
+  }
 }
 
-const removeWord = (sIdx, wIdx) => {
+const removeWord = (sIdx: number, wIdx: number): void => {
   if (results.value[sIdx] === 'correct') return
-  const word = userSentences.value[sIdx][wIdx]
-  shuffledWords.value[sIdx].push(word)
-  userSentences.value[sIdx].splice(wIdx, 1)
+  const words = shuffledWords.value[sIdx]
+  const sentences_arr = userSentences.value[sIdx]
+  if (words && sentences_arr) {
+    const word = sentences_arr[wIdx]
+    if (word) {
+      words.push(word)
+      sentences_arr.splice(wIdx, 1)
+    }
+  }
 }
 
-const checkSentence = (idx) => {
-  const userStr = userSentences.value[idx].join(' ')
+const checkSentence = (idx: number): void => {
+  const sentences_arr = userSentences.value[idx]
+  if (!sentences_arr) return
+
+  const userStr = sentences_arr.join(' ')
   const targetStr = sentences[idx]
+  if (!targetStr) return
 
   // Use compromise for some basic normalization if needed, 
   // but for drag and drop exact match is usually expected.
   const docUser = nlp(userStr).normalize().text()
-  const docTarget = nlp(targetStr).normalize().text()
+  const docTarget = nlp(targetStr).normalize().text() || targetStr
 
   if (docUser === docTarget) {
     results.value[idx] = 'correct'
@@ -120,8 +138,11 @@ const checkSentence = (idx) => {
   }
 }
 
-const resetSentence = (idx) => {
-  const words = sentences[idx].split(' ')
+const resetSentence = (idx: number): void => {
+  const sentence = sentences[idx]
+  if (!sentence) return
+
+  const words = sentence.split(' ')
   shuffledWords.value[idx] = [...words].sort(() => Math.random() - 0.5)
   userSentences.value[idx] = []
   results.value[idx] = null

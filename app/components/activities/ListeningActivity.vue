@@ -1,5 +1,8 @@
 <template>
   <div class="space-y-8">
+    <div class="mb-6">
+      <ProgressBar :progress="progressPercentage" label="Progreso General" />
+    </div>
     <div v-for="(q, idx) in questions" :key="idx"
       class="p-6 bg-slate-50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5 shadow-sm transition-all"
       :class="{ 'border-emerald-500/50 bg-emerald-500/5': results[idx] === 'correct' }">
@@ -37,17 +40,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { Volume2 } from 'lucide-vue-next'
 import confetti from 'canvas-confetti'
 import { useGameStore } from '@/stores/useGameStore'
 import LISTEN_ACTIVITIES from '@/constant/listenActivities'
+import ProgressBar from '@/components/ui/ProgressBar.vue'
+
+type ResultStatus = 'correct' | 'incorrect' | null
 
 const store = useGameStore()
 const questions = LISTEN_ACTIVITIES
 
-const selectedAnswers = ref(questions.map(() => null))
-const results = ref(questions.map(() => null))
+const selectedAnswers = ref<(string | null)[]>(questions.map(() => null))
+const results = ref<ResultStatus[]>(questions.map(() => null))
+
+const progressPercentage = computed(() => {
+  const correct = results.value.filter(r => r === 'correct').length
+  return (correct / questions.length) * 100
+})
 
 let winAudio: HTMLAudioElement | null = null
 
@@ -63,16 +74,17 @@ onUnmounted(() => {
   }
 })
 
-const playAudio = (url) => {
+const playAudio = (url: string): void => {
   const audio = new Audio(url)
   audio.play()
 }
 
-const selectOption = (idx, opt) => {
+const selectOption = (idx: number, opt: string): void => {
   selectedAnswers.value[idx] = opt
-  if (opt === questions[idx].correct) {
+  const question = questions[idx]
+  if (question && opt === question.correct) {
     results.value[idx] = 'correct'
-    
+
     if (winAudio) {
       winAudio.currentTime = 0
       winAudio.play().catch(e => console.error(e))
