@@ -60,8 +60,8 @@
                     class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/80 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase font-bold tracking-widest whitespace-nowrap">Search</span>
             </div>
 
-            <!-- Settings -->
-            <div class="relative group">
+            <!-- Settings (only allowed to change once from desktop) -->
+            <div v-if="!store.status.nameChangedFromDesktop" class="relative group">
                 <button @click="$emit('settings')"
                     class="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center shadow-lg transform group-hover:scale-125 group-hover:-translate-y-2 transition-all duration-300">
                     <Settings class="w-6 h-6 text-white/80" />

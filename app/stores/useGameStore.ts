@@ -18,6 +18,7 @@ export const useGameStore = defineStore("game", {
       hasStarted: false,
       sessionActive: false,
       guideSeen: false,
+      nameChangedFromDesktop: false,
     },
 
     security: {
@@ -45,11 +46,18 @@ export const useGameStore = defineStore("game", {
   }),
 
   actions: {
-    setIdentity(data: { fullName: string; nickname?: string; gradeGroup?: string }) {
+    setIdentity(data: {
+      fullName: string;
+      nickname?: string;
+      gradeGroup?: string;
+    }) {
       this.user.fullName = data.fullName;
       this.user.nickname = data.nickname || "Guest-User";
       this.user.gradeGroup = data.gradeGroup || "N/A";
       this.status.sessionActive = true;
+      if (this.status.isPcUnlocked) {
+        this.status.nameChangedFromDesktop = true;
+      }
     },
 
     markGuideAsSeen() {
@@ -91,6 +99,7 @@ export const useGameStore = defineStore("game", {
 
     minimizeApp() {
       this.status.currentStep = "desktop";
+      this.status.isMaximized = false;
     },
 
     toggleMaximize() {
@@ -161,6 +170,7 @@ export const useGameStore = defineStore("game", {
       this.status.isMaximized = false;
       this.status.currentStep = "login";
       this.status.runningApps = [];
+      this.status.nameChangedFromDesktop = false;
 
       this.academic.score = 0;
       this.academic.completedExercises = 0;
@@ -172,6 +182,6 @@ export const useGameStore = defineStore("game", {
 
   persist: {
     key: "between-words-session",
-    storage: typeof window !== 'undefined' ? window.sessionStorage : undefined,
+    storage: typeof window !== "undefined" ? window.sessionStorage : undefined,
   },
 });

@@ -4,7 +4,8 @@
         <div v-motion :initial="{ opacity: 0, scale: 0.98 }" :enter="{ opacity: 1, scale: 1 }"
             class="flex flex-col h-full w-full max-w-5xl bg-white dark:bg-[#0a0a0c] border border-slate-200 dark:border-white/5 rounded-none md:rounded-3xl overflow-hidden relative shadow-xl dark:shadow-[0_0_50px_-12px_rgba(168,85,247,0.15)] transition-colors">
 
-            <header v-motion :initial="{ opacity: 0, y: -20 }" :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: 200 } }"
+            <header v-motion :initial="{ opacity: 0, y: -20 }"
+                :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: 200 } }"
                 class="p-5 border-b border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#0a0a0c] flex items-center justify-between z-20 transition-colors">
                 <div class="flex items-center gap-4">
                     <div class="relative">
@@ -18,13 +19,15 @@
                         </div>
                     </div>
                     <div>
-                        <h1 class="text-lg font-black text-slate-900 dark:text-white tracking-[0.2em] uppercase leading-none transition-colors">
+                        <h1
+                            class="text-lg font-black text-slate-900 dark:text-white tracking-[0.2em] uppercase leading-none transition-colors">
                             Aria <span class="text-nebula-primary text-xs ml-1">AI</span>
                         </h1>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-[9px] text-nebula-cyan font-mono tracking-widest animate-pulse">//
                                 SYSTEM_READY</span>
-                            <span class="text-[9px] text-slate-400 dark:text-white/20 font-mono transition-colors">v2.0.4</span>
+                            <span
+                                class="text-[9px] text-slate-400 dark:text-white/20 font-mono transition-colors">v2.0.4</span>
                         </div>
                     </div>
                 </div>
@@ -77,11 +80,13 @@
                 </div>
             </section>
 
-            <footer class="p-6 bg-white dark:bg-[#0a0a0c] border-t border-slate-200 dark:border-white/5 z-20 shadow-lg dark:shadow-[0_-10px_20px_rgba(0,0,0,0.5)] transition-colors">
+            <footer
+                class="p-6 bg-white dark:bg-[#0a0a0c] border-t border-slate-200 dark:border-white/5 z-20 shadow-lg dark:shadow-[0_-10px_20px_rgba(0,0,0,0.5)] transition-colors">
                 <div class="max-w-4xl mx-auto space-y-5">
                     <div class="flex items-end gap-3">
-                        <UiInput ref="inputRef" v-model="inputMessage" placeholder="Escribe un mensaje..."
-                            class="flex-1" :disabled="isTyping" @keyup.enter="handleSendMessage" />
+                        <UiInput type="textarea" ref="inputRef" v-model="inputMessage"
+                            placeholder="Escribe un mensaje..." class="flex-1" :disabled="isTyping"
+                            @keyup.enter="handleSendMessage" />
                         <UiButton variant="primary" size="md" :icon="Send" :loading="isTyping"
                             @click="handleSendMessage" />
                     </div>

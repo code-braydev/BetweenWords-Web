@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- AI Help Card -->
-                <div
+                <div v-if="showAri"
                     class="p-6 bg-gradient-to-br from-nebula-primary/20 via-nebula-primary/5 to-transparent border border-nebula-primary/30 rounded-3xl relative overflow-hidden group">
                     <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <Cpu class="w-24 h-24 text-nebula-primary" />
@@ -96,8 +96,17 @@
 <script setup>
 import { WifiOff, Video, Sparkles, Cpu } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
-
+const route = useRoute()
+const store = useGameStore()
 const isOnline = ref(true)
+
+// Ari (AI assistant) is only available when there is an active session
+// i.e. there is a session parameter in the URL, that session is valid/active,
+// and they've gone past the start screen and are in the game environment
+const showAri = computed(() => {
+    const isSessionValid = store.session.valid && store.status.hasStarted
+    return isSessionValid
+})
 
 const navLinks = [
     { name: 'Introducción', href: '#intro' },

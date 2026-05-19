@@ -79,7 +79,7 @@ export const useChatStore = defineStore("chat", {
       }
     },
 
-    clearChat() {
+    async clearChat() {
       this.messages = [
         {
           id: "welcome",
@@ -88,8 +88,16 @@ export const useChatStore = defineStore("chat", {
           timestamp: new Date(),
         },
       ];
-      this.usageCount = 0;
       this.isTyping = false;
+
+      try {
+        await $fetch('/api/chat-reset', {
+          method: 'POST',
+          credentials: 'include'
+        });
+      } catch (error) {
+        console.error('Failed to reset chat on server:', error);
+      }
     },
   },
   persist: {

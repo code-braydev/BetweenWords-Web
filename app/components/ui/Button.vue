@@ -1,5 +1,5 @@
 <template>
-    <button v-motion :initial="{ scale: 1 }" :hovered="{ scale: 1.05 }" :tapped="{ scale: 0.95 }"
+    <button ref="btnRef" v-motion :initial="{ scale: 1 }" :hovered="{ scale: 1.05 }" :tapped="{ scale: 0.95 }"
         :disabled="disabled || loading" @click="$emit('click')" :class="[
             'group relative font-mono font-bold tracking-widest transition-all duration-300 rounded-lg overflow-hidden flex items-center justify-center gap-2',
             variantClasses[variant],
@@ -29,6 +29,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { Loader2 } from 'lucide-vue-next'
 
 const props = defineProps({
@@ -57,4 +58,13 @@ const sizeClasses = {
     md: 'px-6 py-3 text-xs',
     lg: 'px-10 py-4 text-sm uppercase'
 }
+
+const btnRef = ref(null)
+const focus = () => {
+    btnRef.value?.focus()
+}
+
+defineExpose({
+    focus
+})
 </script>

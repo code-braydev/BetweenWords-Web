@@ -2,30 +2,19 @@
     <!-- ── Mobile: Hamburger Toggle Button ── -->
     <!-- Only shown when sidebar is NOT conflicting with fullscreen; z-index is kept below maximized apps -->
     <div class="sm:hidden fixed top-3 right-3 z-[60]">
-        <button
-            @click="isOpen = !isOpen"
+        <button @click="isOpen = !isOpen"
             class="w-9 h-9 flex items-center justify-center rounded-lg bg-black/40 backdrop-blur-xl border border-white/10 text-white/70 hover:text-white hover:border-white/20 transition-all active:scale-95"
-            :aria-label="isOpen ? 'Close menu' : 'Open menu'"
-        >
+            :aria-label="isOpen ? 'Close menu' : 'Open menu'">
             <Menu v-if="!isOpen" class="w-4 h-4" />
             <X v-else class="w-5 h-5" />
         </button>
     </div>
 
     <!-- ── Mobile: Backdrop Overlay ── -->
-    <Transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-    >
-        <div
-            v-if="isOpen"
-            class="sm:hidden fixed inset-0 bg-black/50 z-[55]"
-            @click="isOpen = false"
-        />
+    <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0"
+        enter-to-class="opacity-100" leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100"
+        leave-to-class="opacity-0">
+        <div v-if="isOpen" class="sm:hidden fixed inset-0 bg-black/50 z-[55]" @click="isOpen = false" />
     </Transition>
 
     <!-- ── Sidebar Panel ── -->
@@ -42,9 +31,12 @@
             : 'bg-black/70 backdrop-blur-2xl border-white/5 shadow-2xl',
     ]">
         <!-- ── Logo + Brand ── -->
-        <div class="flex items-center gap-3 px-4 py-5 sm:px-0 sm:py-0 sm:justify-center cursor-pointer group" @click="goTo('/')">
+        <div class="flex items-center gap-3 px-4 py-5 sm:px-0 sm:py-0 sm:justify-center cursor-pointer group"
+            @click="goTo('/')">
             <div class="relative shrink-0">
-                <div class="absolute -inset-1.5 bg-nebula-primary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div
+                    class="absolute -inset-1.5 bg-nebula-primary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                </div>
                 <img src="/logo.png" class="w-9 h-9 relative z-10" alt="Between Words Logo" />
             </div>
             <!-- Brand name — hidden on desktop slim rail, visible in mobile drawer -->
@@ -55,20 +47,15 @@
         <nav class="flex-1 flex flex-col gap-1 sm:gap-5 w-full px-3 sm:px-0 sm:items-center mt-2 sm:mt-0">
 
             <!-- HOME — only in mobile drawer (desktop goes to logo) -->
-            <button
-                @click="goTo('/')"
-                class="sm:hidden flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-all text-sm font-medium"
-            >
+            <button @click="goTo('/')"
+                class="sm:hidden flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-all text-sm font-medium">
                 <Home class="w-4 h-4 shrink-0" />
                 <span>Home</span>
             </button>
 
             <!-- LEARNING -->
             <UiTooltip text="LEARNING">
-                <button
-                    @click="goTo('/learning')"
-                    :class="navBtnClass"
-                >
+                <button @click="goTo('/learning')" :class="navBtnClass">
                     <GraduationCap class="w-5 h-5 shrink-0" />
                     <span class="sm:hidden text-sm font-medium">Learning</span>
                 </button>
@@ -76,10 +63,7 @@
 
             <!-- ACTIVITIES -->
             <UiTooltip text="ACTIVITIES">
-                <button
-                    @click="goTo('/activities')"
-                    :class="navBtnClass"
-                >
+                <button @click="goTo('/activities')" :class="navBtnClass">
                     <Notebook class="w-5 h-5 shrink-0" />
                     <span class="sm:hidden text-sm font-medium">Activities</span>
                 </button>
@@ -87,10 +71,7 @@
 
             <!-- RESOURCES -->
             <UiTooltip text="RESOURCES">
-                <button
-                    @click="goTo('/resources')"
-                    :class="navBtnClass"
-                >
+                <button @click="goTo('/resources')" :class="navBtnClass">
                     <Folder class="w-5 h-5 shrink-0" />
                     <span class="sm:hidden text-sm font-medium">Resources</span>
                 </button>
@@ -98,10 +79,7 @@
 
             <!-- ARI — only shown when session is active (user is registered / game started) -->
             <UiTooltip v-if="showAri" text="AI_MESSAGES">
-                <button
-                    @click="goTo('/message')"
-                    :class="navBtnClass"
-                >
+                <button @click="goTo('/message')" :class="navBtnClass">
                     <MessageCircle class="w-5 h-5 shrink-0" />
                     <span class="sm:hidden text-sm font-medium">Ari</span>
                 </button>
@@ -109,10 +87,7 @@
 
             <!-- CREDITS -->
             <UiTooltip text="CREDITS">
-                <button
-                    @click="goTo('/credits')"
-                    :class="navBtnClass"
-                >
+                <button @click="goTo('/credits')" :class="navBtnClass">
                     <Hammer class="w-5 h-5 shrink-0" />
                     <span class="sm:hidden text-sm font-medium">Credits</span>
                 </button>
@@ -121,10 +96,8 @@
 
         <!-- ── Mobile: Close Button (bottom of drawer) ── -->
         <div class="sm:hidden px-3 pb-6">
-            <button
-                @click="isOpen = false"
-                class="w-full py-2.5 flex items-center justify-center gap-2 rounded-lg bg-white/5 border border-white/10 text-white/40 hover:text-white/70 text-xs font-bold uppercase tracking-widest transition-all"
-            >
+            <button @click="isOpen = false"
+                class="w-full py-2.5 flex items-center justify-center gap-2 rounded-lg bg-white/5 border border-white/10 text-white/40 hover:text-white/70 text-xs font-bold uppercase tracking-widest transition-all">
                 <X class="w-4 h-4" />
                 Cerrar
             </button>
@@ -143,10 +116,12 @@ const isOpen = ref(false)
 // Transparent sidebar only on the home desktop view (not in drawer mode)
 const isGlass = computed(() => route.path === '/' && !isOpen.value)
 
-// Ari (AI assistant) is only available when the user has an active session
-// i.e. they've gone past the start screen and are in the game environment
+// Ari (AI assistant) is only available when there is an active session
+// i.e. there is a session parameter in the URL, that session is valid/active,
+// and they've gone past the start screen and are in the game environment
 const showAri = computed(() => {
-    return store.status.hasStarted && store.status.isPcUnlocked
+    const isSessionValid = store.session.valid
+    return isSessionValid
 })
 
 // Unified nav button class — icon-only on desktop, icon+label on mobile

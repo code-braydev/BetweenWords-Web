@@ -1,12 +1,13 @@
 <template>
-    <div class="h-full w-full flex flex-col items-center justify-center p-4">
+    <div class="h-full w-full flex items-center justify-around p-4">
         <ClientOnly>
-            <!-- GNOME Style Clock & Hint -->
             <div v-motion :initial="{ opacity: 0, y: -20 }" :enter="{ opacity: 1, y: 0, transition: { duration: 800 } }"
                 class="flex flex-col items-center mb-12 sm:mb-20">
                 <GameClock />
-                <p class="mt-4 px-6 py-2 bg-black/20 backdrop-blur-md border border-white/5 rounded-full text-[10px] sm:text-xs text-white/60 font-mono italic tracking-wide">
-                    "I have visited the city known as the <span class="text-nebula-cyan font-bold">Pearl of the Sinú</span>."
+                <p
+                    class="mt-4 px-6 py-2 bg-black/20 backdrop-blur-md border border-white/5 rounded-full text-[10px] sm:text-xs text-white/60 font-mono italic tracking-wide">
+                    "I have visited the city known as the <span class="text-nebula-cyan font-bold">Pearl of the
+                        Sinú</span>."
                 </p>
             </div>
 
@@ -32,14 +33,16 @@
 
                     <form @submit.prevent="handleAccess" class="w-full space-y-4">
                         <div class="relative">
-                            <UiInput v-model="password" type="password" label="Contraseña de la PC" placeholder="••••••••"
-                                :icon="Lock" :glass="true"
+                            <UiInput v-model="password" type="password" label="Contraseña de la PC"
+                                placeholder="••••••••" :icon="Lock" :glass="true"
                                 :error="store.security.isLocked ? `SISTEMA BLOQUEADO: ${store.security.lockTime}s` : loginError"
                                 :disabled="store.security.isLocked" />
-                            
-                            <div v-if="store.security.isLocked" 
+
+                            <div v-if="store.security.isLocked"
                                 class="absolute inset-0 bg-black/40 backdrop-blur-[2px] rounded-xl flex items-center justify-center">
-                                <span class="text-[10px] font-mono text-red-400 animate-pulse uppercase tracking-tighter">Acceso restringido</span>
+                                <span
+                                    class="text-[10px] font-mono text-red-400 animate-pulse uppercase tracking-tighter">Acceso
+                                    restringido</span>
                             </div>
                         </div>
 
@@ -49,9 +52,12 @@
                     </form>
 
                     <div class="flex gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full" :class="store.security.attempts > 0 ? 'bg-red-500 shadow-[0_0_5px_red]' : 'bg-white/10'"></span>
-                        <span class="w-1.5 h-1.5 rounded-full" :class="store.security.attempts > 1 ? 'bg-red-500 shadow-[0_0_5px_red]' : 'bg-white/10'"></span>
-                        <span class="w-1.5 h-1.5 rounded-full animate-pulse" :class="store.security.attempts > 2 ? 'bg-red-500 shadow-[0_0_5px_red]' : 'bg-white/10'"></span>
+                        <span class="w-1.5 h-1.5 rounded-full"
+                            :class="store.security.attempts > 0 ? 'bg-red-500 shadow-[0_0_5px_red]' : 'bg-white/10'"></span>
+                        <span class="w-1.5 h-1.5 rounded-full"
+                            :class="store.security.attempts > 1 ? 'bg-red-500 shadow-[0_0_5px_red]' : 'bg-white/10'"></span>
+                        <span class="w-1.5 h-1.5 rounded-full animate-pulse"
+                            :class="store.security.attempts > 2 ? 'bg-red-500 shadow-[0_0_5px_red]' : 'bg-white/10'"></span>
                     </div>
                 </div>
             </UiCard>

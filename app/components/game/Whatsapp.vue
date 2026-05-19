@@ -1,29 +1,25 @@
 <template>
     <div
-        class="flex h-full bg-white/5 dark:bg-black/50 backdrop-blur-2xl rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 flex-col shadow-2xl relative">
-        <!-- Window Header -->
-        <div class="h-10 bg-black/60 backdrop-blur-xl border-b border-white/10 flex items-center px-4 shrink-0 z-50">
+        class="flex h-full bg-white/5 dark:bg-nebula-dark/60 backdrop-blur-2xl rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 flex-col shadow-2xl relative">
+        <div class="h-10 bg-nebula-dark/60 backdrop-blur-xl flex items-center px-4 shrink-0 z-50">
             <GameWindowControls />
             <div class="flex-1 text-center">
                 <span class="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">WhatsApp Desktop</span>
             </div>
         </div>
-
         <div class="flex flex-1 flex-col sm:flex-row overflow-hidden relative">
-            <!-- Sidebar Contacts -->
+            <!-- Sidebar -->
             <div
-                :class="['w-full sm:w-1/3 border-r border-white/10 flex flex-col bg-black/40 absolute sm:relative h-full z-20 transition-transform duration-300', showSidebar ? 'translate-x-0' : '-translate-x-full sm:translate-x-0']">
-                <div class="p-4 border-b border-white/10 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-10 h-10 rounded-full overflow-hidden bg-nebula-primary/20 flex items-center justify-center">
-                            <User class="w-6 h-6 text-white" />
-                        </div>
-                        <span class="text-white font-semibold font-mono text-sm">Chats</span>
+                :class="['w-full sm:w-1/3 border-r border-white/10 flex flex-col bg-nebula-dark lg:bg-black/60 absolute sm:relative h-full z-20 transition-transform duration-300', showSidebar ? 'translate-x-0' : '-translate-x-full sm:translate-x-0']">
+                <div class="p-4 flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full overflow-hidden bg-nebula-primary/20 flex items-center justify-center">
+                        <User class="w-6 h-6 text-white" />
                     </div>
+                    <span class="text-white font-semibold font-mono text-sm">Chats</span>
+
                 </div>
                 <div class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
-                    <!-- Contact Item -->
                     <div v-for="chat in chats" :key="chat.id" @click="selectChat(chat.id)"
                         :class="['p-3 rounded-lg cursor-pointer flex items-center gap-3 relative transition-colors', activeChatId === chat.id ? 'bg-white/10' : 'hover:bg-white/5']">
                         <div
@@ -42,24 +38,18 @@
                                 {{ chat.messages[chat.messages.length - 1]?.content }}
                             </p>
                         </div>
-                        <div v-if="chat.id === '11b'"
-                            class="w-2 h-2 rounded-full bg-nebula-cyan absolute right-4 shadow-[0_0_8px_rgba(0,242,255,0.8)]">
-                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Chat Area -->
             <div class="flex-1 flex flex-col relative bg-nebula-dark/60 overflow-hidden w-full h-full">
-                <!-- Chat Header -->
-                <div
-                    class="p-3 sm:p-4 border-b border-white/10 bg-black/20 flex items-center gap-3 backdrop-blur-md z-10 shrink-0">
-                    <button class="sm:hidden text-white/70 hover:text-white mr-1 p-2 bg-white/5 rounded-full"
-                        @click="showSidebar = true">
+                <div class="p-3 sm:p-4 bg-nebula-dark/60 flex items-center gap-3 z-10 shrink-0">
+                    <button class="sm:hidden mr-1 p-2 rounded-full" @click="showSidebar = true">
                         <ArrowLeft class="w-5 h-5" />
                     </button>
                     <div
-                        :class="['w-10 h-10 rounded-full overflow-hidden border flex items-center justify-center shrink-0', activeChat?.avatarColor]">
+                        :class="['w-10 h-10 rounded-full overflow-hidden flex items-center justify-center shrink-0', activeChat?.avatarColor]">
                         <component :is="getIcon(activeChat?.avatar)" class="w-5 h-5" />
                     </div>
                     <div class="min-w-0">
@@ -99,7 +89,7 @@
                                 </div>
                                 <div class="min-w-0">
                                     <p class="text-xs font-mono text-nebula-cyan font-bold truncate">
-                                        http://exam.local/level1</p>
+                                        https://examen-de-ingles.org/present-perfect</p>
                                     <p class="text-[10px] text-white/40">Click para abrir</p>
                                 </div>
                             </div>
@@ -114,9 +104,9 @@
                 </div>
 
                 <!-- Input Area (Read Only) -->
-                <div class="p-3 sm:p-4 bg-black/30 border-t border-white/10 backdrop-blur-md shrink-0 z-10">
+                <div class="p-3 sm:p-4 bg-nebula-dark/60 backdrop-blur-md shrink-0 z-10">
                     <div
-                        class="flex items-center gap-3 bg-black/40 rounded-full px-4 py-2 sm:py-3 border border-white/10 opacity-60">
+                        class="flex items-center gap-3 bg-nebula-dark rounded-full px-4 py-2 sm:py-3 border border-white/10 opacity-60">
                         <Smile class="w-5 h-5 text-white/30 shrink-0" />
                         <input type="text" placeholder="Solo lectura en modo examen" disabled
                             class="flex-1 bg-transparent border-none outline-none text-white/50 text-xs sm:text-sm placeholder-white/30 cursor-not-allowed text-center sm:text-left min-w-0" />
@@ -160,7 +150,7 @@ onMounted(() => {
         showSidebar.value = true // Show by default initially on mobile too, or false depending on preference. Let's set it to true so they see the list.
     }
 })
-const chats = computed(() => getHistoryChats(store.user.fullName))
+const chats = computed(() => getHistoryChats())
 
 const activeChat = computed(() => chats.value.find(c => c.id === activeChatId.value))
 

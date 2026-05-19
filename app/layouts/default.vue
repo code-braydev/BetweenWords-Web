@@ -54,7 +54,7 @@
             <OnboardingModal :show="showOnboarding" @close="handleOnboardingDone" />
 
             <!-- Spotlight / System Menu -->
-            <SpotlightMenu />
+            <SpotlightMenu v-if="store.status.isPcUnlocked" />
         </ClientOnly>
     </div>
 </template>
@@ -150,8 +150,10 @@ const handleIdentify = () => {
 // Called when StudentModal emits 'registered'
 const handleStudentRegistered = () => {
     showIdentityModal.value = false
-    // Immediately show onboarding for new sessions
-    showOnboarding.value = true
+    // Only show onboarding for initial registration, not name edits from the desktop
+    if (!store.status.isPcUnlocked) {
+        showOnboarding.value = true
+    }
 }
 
 // Called when OnboardingModal emits 'close'

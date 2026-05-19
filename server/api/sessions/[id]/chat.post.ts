@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
       config: {
         systemInstruction: SYSTEM_PROMPT,
         temperature: 0.4,
-        maxOutputTokens: 300,
+        maxOutputTokens: 1000,
       },
       history: chatHistory,
     });

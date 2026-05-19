@@ -2,19 +2,22 @@
 // the user must be registered in the game store (isPcUnlocked).
 // Runs only on this route, not globally.
 export default defineNuxtRouteMiddleware((to) => {
-    // Allow if a session query param is present
-    if (to.query.session) return
-
-    // On the client side, also check the Pinia store
+    // On the client side, verify session validity and active status in Pinia store
     if (import.meta.client) {
         const store = useGameStore()
-        // Allow if session is active (student identified) or PC is already unlocked
-        if (store.status.sessionActive || store.status.isPcUnlocked) return
+        
+        const isSessionValid = store.session.valid
+        const isGameActive = store.status.sessionActive || store.status.isPcUnlocked
 
-        // No session and no active game — block access
-        return navigateTo({
-            path: '/forbidden',
-            query: { from: to.path }
-        })
+        if (isSessionValid && isGameActive) return
     }
+
+    // Fallback: Allow if a session query param is present (e.g. on initial loading/SSR)
+    if (to.query.session) return
+
+    // Otherwise, block access
+    return navigateTo({
+        path: '/forbidden',
+        query: { from: to.path }
+    })
 })

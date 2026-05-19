@@ -19,7 +19,7 @@ export async function getOrCreateStudentSession(event: H3Event): Promise<{ id: s
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      maxAge: 3600 // 1 hora
+      maxAge: 7200 // 2 horas
     })
   }
 

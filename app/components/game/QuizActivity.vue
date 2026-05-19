@@ -30,7 +30,8 @@
                     <span class="text-[10px] font-black text-nebula-secondary uppercase tracking-widest">
                         Pregunta {{ idx + 1 }} / {{ questions.length }}
                     </span>
-                    <span v-if="q.section" class="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full border"
+                    <span v-if="q.section"
+                        class="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full border"
                         :class="sectionBadgeClass(q.section)">
                         {{ q.section }}
                     </span>
@@ -115,7 +116,6 @@
 
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <UiButton label="VER NOTA EN EXCEL" variant="primary" size="lg" @click="openExam" />
-            <UiButton label="REINTENTAR" variant="ghost" size="lg" @click="resetQuiz" />
             </div>
         </div>
     </div>

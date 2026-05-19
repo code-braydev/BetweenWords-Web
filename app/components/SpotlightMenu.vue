@@ -48,7 +48,7 @@
                             <BookOpen class="w-4 h-4 text-nebula-cyan" />
                             <span>Examen (Desktop)</span>
                         </button>
-                        <button @click="openProfile" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3">
+                        <button v-if="!store.status.nameChangedFromDesktop" @click="openProfile" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3">
                             <User class="w-4 h-4 text-emerald-400" />
                             <span>Perfil</span>
                         </button>

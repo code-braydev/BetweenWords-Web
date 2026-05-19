@@ -31,7 +31,7 @@
             <div v-if="open" :class="[
                 'absolute z-50 mt-2 w-full origin-top-left overflow-hidden rounded-lg border shadow-lg',
                 glass
-                    ? 'bg-black/40 backdrop-blur-xl border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
+                    ? 'bg-nebula-dark/90 backdrop-blur-xl border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
                     : 'border-slate-200 dark:border-white/10 bg-white dark:bg-nebula-dark dark:shadow-neon-fuchsia'
             ]">
                 <button v-for="option in options" :key="option.value" type="button" @click="selectOption(option.value)"
@@ -90,5 +90,14 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside)
+})
+
+const focusButton = () => {
+    container.value?.querySelector('button')?.focus()
+}
+
+defineExpose({
+    open,
+    focusButton
 })
 </script>
