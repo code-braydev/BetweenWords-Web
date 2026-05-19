@@ -5,6 +5,11 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   devtools: { enabled: true },
+  app: {
+    head: {
+      link: [{ rel: "icon", type: "image/png", href: "/logo.png" }],
+    },
+  },
   runtimeConfig: {
     geminiApiKey: process.env.GEMINI_API_KEY,
     geminiModel: process.env.GEMINI_MODEL || "gemini-2.5-flash",
