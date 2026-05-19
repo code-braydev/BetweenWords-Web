@@ -1,9 +1,8 @@
 <template>
-    <main
+    <main v-motion :initial="{ opacity: 0, y: 15 }"
+        :enter="{ opacity: 1, y: 0, transition: { duration: 400, ease: 'easeOut' } }"
         class="min-h-screen bg-transparent text-slate-900 dark:text-nebula-text flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 transition-colors duration-300">
-        <header v-motion :initial="{ opacity: 0, y: -20 }"
-            :enter="{ opacity: 1, y: 0, transition: { duration: 500, ease: 'easeOut' } }"
-            class="mb-8 sm:mb-10 lg:mb-12">
+        <header class="mb-8 sm:mb-10 lg:mb-12">
             <div class="flex flex-col gap-4 mb-4">
                 <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
                     <UiBadge variant="primary" class="text-xs sm:text-sm">LECCIÓN</UiBadge>
@@ -19,23 +18,19 @@
                 fundamental.
             </p>
         </header>
+
         <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
-            <!-- Main Content: The Learning Journey -->
             <div class="flex-1 space-y-12 sm:space-y-16">
-                <!-- 01. Introduction -->
                 <section id="intro" class="scroll-mt-24">
                     <LearnIntro />
                 </section>
 
-                <!-- 02. Integrated Theory -->
                 <section id="theory" class="scroll-mt-24">
                     <LearnGrammarTheory />
                 </section>
             </div>
 
-            <!-- Sidebar: Supporting Tools (Desktop: Sticky, Mobile: Flow) -->
             <aside class="w-full lg:w-80 space-y-8 h-fit lg:sticky lg:top-8">
-                <!-- Video Section -->
                 <UiCard class="border-nebula-cyan/30 p-4 bg-white/5 backdrop-blur-xl">
                     <div class="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
                         <Video class="w-4 h-4 text-nebula-cyan" />
@@ -54,7 +49,6 @@
                     </div>
                 </UiCard>
 
-                <!-- Progress Guide (Quick Nav) -->
                 <div class="hidden lg:block p-6 bg-white/5 border border-white/10 rounded-3xl mb-8">
                     <h4 class="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-6">Contenido</h4>
                     <nav class="space-y-4">
@@ -67,7 +61,6 @@
                     </nav>
                 </div>
 
-                <!-- AI Help Card -->
                 <div v-if="showAri"
                     class="p-6 bg-gradient-to-br from-nebula-primary/20 via-nebula-primary/5 to-transparent border border-nebula-primary/30 rounded-3xl relative overflow-hidden group">
                     <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -96,7 +89,6 @@
 <script setup>
 import { WifiOff, Video, Sparkles, Cpu } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
-const route = useRoute()
 const store = useGameStore()
 const isOnline = ref(true)
 

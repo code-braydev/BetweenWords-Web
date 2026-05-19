@@ -37,7 +37,7 @@
                 <div
                     class="absolute -inset-1.5 bg-nebula-primary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 </div>
-                <img src="/logo.png" class="w-9 h-9 relative z-10" alt="Between Words Logo" />
+                <img src="/logo.webp" class="w-9 h-9 relative z-10" alt="Between Words Logo" />
             </div>
             <!-- Brand name — hidden on desktop slim rail, visible in mobile drawer -->
             <span class="sm:hidden text-white font-black text-base tracking-tight truncate">Between</span>

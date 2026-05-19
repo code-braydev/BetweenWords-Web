@@ -1,6 +1,5 @@
 <template>
-    <section v-motion :initial="{ opacity: 0, y: 40 }"
-        :enter="{ opacity: 1, y: 0, transition: { duration: 600, ease: 'easeOut' } }" class="p-4 sm:p-6 lg:p-8">
+    <section class="p-4 sm:p-6 lg:p-8">
         <UiCard>
             <template #header>
                 <div class="flex items-center gap-3">

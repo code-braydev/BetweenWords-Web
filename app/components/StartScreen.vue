@@ -26,7 +26,7 @@
                     <div
                         class="absolute -inset-10 bg-nebula-primary rounded-full blur-[80px] opacity-5 group-hover:opacity-20 transition-opacity duration-1000">
                     </div>
-                    <img src="/logo.png" alt="Between Words Logo"
+                    <img src="/logo.webp" alt="Between Words Logo"
                         class="w-24 h-24 sm:w-44 sm:h-44 mb-4 sm:mb-6 drop-shadow-[0_0_15px_rgba(245,44,245,0.3)] animate-logo-float transform group-hover:scale-105 transition-transform duration-700" />
                 </div>
                 <h1
@@ -254,9 +254,19 @@ const generateStarStyle = () => {
 }
 
 @keyframes logo-float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    33% { transform: translateY(-5px) rotate(-1deg); }
-    66% { transform: translateY(-2px) rotate(1deg); }
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    33% {
+        transform: translateY(-5px) rotate(-1deg);
+    }
+
+    66% {
+        transform: translateY(-2px) rotate(1deg);
+    }
 }
 
 .animate-logo-float {

@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import backgroundImage from '~/assets/backgrounds/bg-1.png';
+import backgroundImage from '~/assets/backgrounds/bg-1.webp';
 import { useGameStore } from '~/stores/useGameStore';
 
 const route = useRoute();

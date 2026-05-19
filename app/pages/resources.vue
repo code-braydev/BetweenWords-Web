@@ -1,19 +1,21 @@
 <template>
-    <section v-motion :initial="{ opacity: 0, y: 30 }"
-        :enter="{ opacity: 1, y: 0, transition: { duration: 500, ease: 'easeOut' } }" class="mt-12 p-6">
+    <section v-motion :initial="{ opacity: 0 }" :enter="{ opacity: 1, transition: { duration: 250, ease: 'linear' } }"
+        class="mt-12 p-6">
+
         <div class="border-l-4 border-nebula-primary pl-4">
             <h2 class="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter transition-colors">
                 Learning Resources <span class="text-nebula-primary">&</span> Multimedia
             </h2>
-            <p class="text-[10px] text-slate-400 dark:text-white/50 font-mono tracking-tight transition-colors">// {{
-                TOTAL_RESOURCES }} INDEXED RESOURCES</p>
+            <p class="text-[10px] text-slate-400 dark:text-white/50 font-mono tracking-tight transition-colors">
+                // {{ TOTAL_RESOURCES }} INDEXED RESOURCES
+            </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
-            <UiCard v-for="(res, i) in resources" :key="res.id" v-motion :initial="{ opacity: 0, y: 30, scale: 0.97 }"
-                :enter="{ opacity: 1, y: 0, scale: 1, transition: { duration: 450, delay: 80 + i * 50 } }"
-                class="transition-all group relative overflow-hidden"
-                :class="getCategoryStyles(res.category).border">
+            <UiCard v-for="(res, i) in resources" :key="res.id" v-motion :initial="{ opacity: 0, y: 15, scale: 0.98 }"
+                :enter="{ opacity: 1, y: 0, scale: 1, transition: { duration: 250, delay: i * 30, ease: 'easeOut' } }"
+                class="transition-all group relative overflow-hidden" :class="getCategoryStyles(res.category).border">
+
                 <div class="p-5 flex flex-col h-full">
                     <div class="flex justify-between items-center mb-4">
                         <component :is="getCategoryStyles(res.category).icon" class="w-5 h-5 transition-colors"
@@ -67,7 +69,6 @@ import resourcesData, { getCategoryStyles, TOTAL_RESOURCES, type EnglishResource
 const resources = resourcesData.resources as EnglishResource[]
 const activeVideo = ref<number | null>(null)
 
-// Función para transformar link de YouTube a Embed
 const getEmbedUrl = (url: string) => {
     if (url.includes('youtu.be')) {
         const id = url.split('/').pop()?.split('?')[0]

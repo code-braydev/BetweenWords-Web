@@ -31,7 +31,7 @@
                         class="absolute -inset-1 bg-gradient-to-r from-nebula-primary to-nebula-secondary rounded-2xl blur opacity-0 group-hover:opacity-10 dark:group-hover:opacity-30 transition duration-700">
                     </div>
 
-                    <img src="/images/dev/PeopleBrayan.png" alt="Brayan Avila Orozco" class="w-40 h-40 rounded-full object-cover mb-6 
+                    <img src="/images/dev/PeopleBrayan.webp" alt="Brayan Avila Orozco" class="w-40 h-40 rounded-full object-cover mb-6 
                     group-hover:scale-110 transition-all duration-300 ease-out 
                     will-change-transform antialiased [image-rendering:high-quality]
                     shadow-xl shadow-nebula-primary/20 relative z-10">
@@ -59,7 +59,7 @@
                 <div v-motion :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { delay: 400 } }">
                     <UiCard body-class="flex flex-col items-center text-center p-8 group">
-                        <img src="/images/dev/PeopleDaniela.png" alt="Daniela Baron" class="w-32 h-32 rounded-full object-cover mb-6 
+                        <img src="/images/dev/PeopleDaniela.webp" alt="Daniela Baron" class="w-32 h-32 rounded-full object-cover mb-6 
                     group-hover:scale-110 transition-all duration-300 ease-out 
                     will-change-transform antialiased [image-rendering:high-quality]
                     shadow-lg shadow-indigo-500/5 dark:shadow-nebula-cyan/10">
@@ -78,7 +78,7 @@
                 <div v-motion :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { delay: 550 } }">
                     <UiCard body-class="flex flex-col items-center text-center p-8 group">
-                        <img src="/images/dev/PeopleJesus.png" alt="Jesus Diaz Toro" class="w-32 h-32 rounded-full object-cover mb-6 
+                        <img src="/images/dev/PeopleJesus.webp" alt="Jesus Diaz Toro" class="w-32 h-32 rounded-full object-cover mb-6 
                     group-hover:scale-110 transition-all duration-300 ease-out 
                     will-change-transform antialiased [image-rendering:high-quality]
                     shadow-lg shadow-fuchsia-500/5 dark:shadow-nebula-primary/10">
@@ -102,7 +102,7 @@
                 <div v-motion :initial="{ opacity: 0, y: 20 }"
                     :enter="{ opacity: 1, y: 0, transition: { delay: 700 } }">
                     <UiCard body-class="flex flex-col items-center text-center p-8 group">
-                        <img src="/images/dev/PeopleErick.png" alt="Erick Lopez" class="w-32 h-32 rounded-full object-cover mb-6 
+                        <img src="/images/dev/PeopleErick.webp" alt="Erick Lopez" class="w-32 h-32 rounded-full object-cover mb-6 
                     group-hover:scale-110 transition-all duration-300 ease-out 
                     will-change-transform antialiased [image-rendering:high-quality]
                     shadow-lg shadow-fuchsia-500/5 dark:shadow-nebula-primary/10">

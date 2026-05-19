@@ -1,7 +1,5 @@
 <template>
-    <div v-motion :initial="{ opacity: 0, y: 40 }"
-        :enter="{ opacity: 1, y: 0, transition: { duration: 600, delay: 100, ease: 'easeOut' } }"
-        class="space-y-8 p-4 sm:p-6 lg:p-8">
+    <div class="space-y-8 p-4 sm:p-6 lg:p-8">
         <section id="formula" class="scroll-mt-24">
             <UiCard>
                 <template #header>
@@ -101,7 +99,7 @@
                         class="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 text-center transition-colors">
                         <p class="text-xs font-black text-nebula-primary">{{ word.term }}</p>
                         <p class="text-[10px] text-slate-500 dark:text-white/50 uppercase tracking-wide">{{ word.meaning
-                        }}</p>
+                            }}</p>
                     </div>
                 </div>
             </UiCard>

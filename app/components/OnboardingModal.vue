@@ -5,19 +5,19 @@
                 Tu misión ha comenzado. Tu objetivo es explorar la simulación del sistema, usar tu curiosidad para
                 encontrar el examen dentro del entorno virtual y completarlo. Tus notas se registrarán de manera
                 automática e inmediata con el profesor al finalizar. Investiga, descubre y hackea el sistema.
-            </p>
-            <p class="text-white/80 text-xs font-mono leading-relaxed p-4 bg-white/5 rounded-xl">
+                <br>
+                <br>
                 Si estás confundido, a la izquierda de tu pantalla verás la barra de tareas, allí podrás repasar el
                 tema,
                 recordar los conceptos básicos, buscar fuentes de información... y por último pero no menos importante,
                 hablar con <span class="text-nebula-primary">ARIA</span> para que te ayude con cualquier inquietud.
                 <br>
-                ...
-            </p>
-            <p class="text-white/80 text-xs font-mono leading-relaxed p-4 bg-white/5 rounded-xl">
+                <br>
+                ... .. .
+                <br>
+                <br>
                 ¡Mucha suerte!
             </p>
-
             <div class="pt-4 border-t border-white/5 flex justify-end items-center gap-3">
                 <UiButton ref="buttonRef" label="¡Entendido!" variant="primary" size="md" :icon="Rocket"
                     @click="$emit('close')" class="!outline-none" />
