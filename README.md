@@ -2,7 +2,7 @@
 
 # 🌠 Between Words: THE COSMIC OS SIMULATOR
 
-<img src="https://raw.githubusercontent.com/TU_USUARIO/TU_REPOSITORIO/main/banner.png" alt="Between Words UI">
+<img src="https://raw.githubusercontent.com/code-braydev/betweenwords-web/main/banner.png" alt="Between Words UI">
 
 > _"Don't just learn English, operate the system."_
 
