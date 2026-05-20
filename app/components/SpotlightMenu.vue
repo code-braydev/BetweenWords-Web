@@ -5,31 +5,22 @@
     </div>
 
     <!-- Spotlight Menu -->
-    <Transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="opacity-0 scale-95"
-        enter-to-class="opacity-100 scale-100"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="opacity-100 scale-100"
-        leave-to-class="opacity-0 scale-95"
-    >
+    <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100" leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
         <div v-if="isOpen && !isSleeping" class="fixed inset-0 z-[9998] flex items-start justify-center pt-[15vh]">
             <!-- Backdrop -->
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="close"></div>
-            
+
             <!-- Menu Container -->
-            <div class="relative w-full max-w-2xl bg-white/10 dark:bg-black/40 backdrop-blur-md border border-white/20 shadow-2xl rounded-2xl overflow-hidden flex flex-col mx-4 sm:mx-0">
+            <div
+                class="relative w-full max-w-2xl bg-white/10 dark:bg-black/40 backdrop-blur-md border border-white/20 shadow-2xl rounded-2xl overflow-hidden flex flex-col mx-4 sm:mx-0">
                 <!-- Search Input -->
                 <div class="flex items-center px-4 py-3 border-b border-white/10">
                     <Search class="w-5 h-5 text-white/50 mr-3 shrink-0" />
-                    <input 
-                        ref="searchInput"
-                        v-model="searchQuery"
-                        type="text" 
-                        placeholder="Search system..." 
+                    <input ref="searchInput" v-model="searchQuery" type="text" placeholder="Search system..."
                         class="w-full bg-transparent border-none outline-none text-white placeholder-white/40 font-mono text-lg focus:ring-0 focus:outline-none"
-                        @keydown.esc="close"
-                    />
+                        @keydown.esc="close" />
                     <div class="flex items-center gap-1 text-[10px] text-white/30 font-mono ml-2 shrink-0">
                         <span class="px-1.5 py-0.5 border border-white/10 rounded">ESC</span>
                     </div>
@@ -39,16 +30,20 @@
                 <div class="p-2 max-h-[60vh] overflow-y-auto custom-scrollbar">
                     <!-- Sections -->
                     <div class="mb-4">
-                        <p class="px-3 py-1 text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">Sections</p>
-                        <button @click="navigate('/learning')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3">
+                        <p class="px-3 py-1 text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">Sections
+                        </p>
+                        <button @click="navigate('/learning')"
+                            class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3">
                             <Gamepad2 class="w-4 h-4 text-nebula-primary" />
                             <span>Práctica (Learning)</span>
                         </button>
-                        <button @click="navigate('/')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3">
+                        <button @click="navigate('/')"
+                            class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3">
                             <BookOpen class="w-4 h-4 text-nebula-cyan" />
                             <span>Examen (Desktop)</span>
                         </button>
-                        <button v-if="!store.status.nameChangedFromDesktop" @click="openProfile" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3">
+                        <button v-if="!store.status.nameChangedFromDesktop" @click="openProfile"
+                            class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3">
                             <User class="w-4 h-4 text-emerald-400" />
                             <span>Perfil</span>
                         </button>
@@ -56,12 +51,15 @@
 
                     <!-- System Actions -->
                     <div>
-                        <p class="px-3 py-1 text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">System</p>
-                        <button @click="handleSleep" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3 group">
+                        <p class="px-3 py-1 text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">System
+                        </p>
+                        <button @click="handleSleep"
+                            class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3 group">
                             <Moon class="w-4 h-4 text-yellow-200 group-hover:scale-110 transition-transform" />
                             <span>Sleep Mode</span>
                         </button>
-                        <button @click="handleLogout" class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3 group">
+                        <button @click="handleLogout"
+                            class="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-white/80 transition-colors flex items-center gap-3 group">
                             <LogOut class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform" />
                             <span>Cerrar Sesión</span>
                         </button>
@@ -107,11 +105,8 @@ const handleSleep = () => {
 }
 
 const handleLogout = () => {
-    // Clean student info
-    store.user.fullName = ''
-    store.user.nickname = ''
-    store.resetGame()
-    store.status.hasStarted = false
+    // ── Deep cleanup and redirect ───────────────────────────────────────
+    store.logout()
     close()
     router.push('/')
 }
@@ -133,7 +128,7 @@ const handleKeydown = (e) => {
         e.preventDefault()
         toggleMenu()
     }
-    
+
     if (e.key === 'Escape') {
         if (isSleeping.value) {
             // Wake up & reset for security

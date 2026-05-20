@@ -128,6 +128,7 @@ import { Volume2 } from "lucide-vue-next";
 import * as confetti from 'canvas-confetti';
 
 const store = useGameStore()
+const route = useRoute()
 
 const openExam = () => {
     store.openApp('excel')
@@ -215,24 +216,34 @@ const submitExam = async () => {
     store.academic.isExamCompleted = true;
     finalGrade.value = scaled;
 
-    if (store.session.id) {
-        try {
-            const submitUrl = `/api/sessions/${store.session.id}/submit`;
-            await $fetch(submitUrl, {
-                method: "POST",
-                body: {
-                    sheetUrl: store.session.sheetUrl,
-                    name: store.user.fullName,
-                    score: scaled, // Send the final score out of 5.0
-                },
-            });
-            console.info(`[QuizActivity] ✅ Grade sent to Sheets: ${scaled}/5.0`);
-        } catch (submitError: any) {
-            const msg = submitError?.data?.statusMessage ?? submitError?.message ?? String(submitError);
-            console.error(`[QuizActivity] ❌ Google Sheets submit failed: ${msg}`, submitError);
-        }
-    } else {
-        console.warn("[QuizActivity] No session.id found – skipping Google Sheets submission.");
+    // ── Validación preventiva: obtener sessionId desde query params ─────────
+    const sessionId = (route.query.session as string)?.trim();
+    const sheetUrl = store.session.sheetUrl?.trim();
+    const fullName = store.user.fullName?.trim();
+
+    if (!sessionId || !sheetUrl || !fullName) {
+        console.warn(
+            "[QuizActivity] ⚠️ Envío de calificación omitido: " +
+            (!sessionId ? "sin sesión activa" : !sheetUrl ? "sin URL de sheet" : "sin nombre de usuario")
+        );
+        return;
+    }
+
+    // ── Envío a Google Sheets ──────────────────────────────────────────────
+    try {
+        const submitUrl = `/api/sessions/${sessionId}/submit`;
+        await $fetch(submitUrl, {
+            method: "POST",
+            body: {
+                sheetUrl,
+                name: fullName,
+                score: scaled,
+            },
+        });
+        console.info(`[QuizActivity] ✅ Grade sent to Sheets: ${scaled}/5.0`);
+    } catch (submitError: any) {
+        const msg = submitError?.data?.statusMessage ?? submitError?.message ?? String(submitError);
+        console.error(`[QuizActivity] ❌ Google Sheets submit failed: ${msg}`, submitError);
     }
 
     if (scaled >= 4.0) {

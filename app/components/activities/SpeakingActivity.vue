@@ -23,23 +23,24 @@
         <p class="text-lg font-bold text-slate-800 dark:text-white leading-tight">"{{ q.text }}"</p>
 
         <div class="flex items-center gap-4 mt-2">
-          <button @click.stop="listen(q.audio)"
-            class="p-2 rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-white/40 hover:text-nebula-cyan transition-colors">
-            <Volume2 class="w-5 h-5" />
+          <button type="button" @click.stop.prevent="listen(q.audio)"
+            class="relative z-10 p-2 rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-white/40 hover:text-nebula-cyan transition-colors">
+            <Volume2 class="w-5 h-5 pointer-events-none" />
           </button>
 
-          <button @click.stop.prevent="handleToggle(idx)" :disabled="(isProcessing && activeRecordingIdx === idx) || results[idx] === 'perfect'"
-            class="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 relative group"
+          <button type="button" @click.stop.prevent="handleToggle(idx)"
+            :disabled="(isProcessing && activeRecordingIdx === idx) || results[idx] === 'perfect'"
+            class="relative z-10 w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 group"
             :class="[
               // State 0: Idle
               !isRecording && !isProcessing && results[idx] === null ? 'bg-nebula-primary shadow-neon-fuchsia hover:scale-110' : '',
-              
+
               // State 1: Recording
               isRecording && activeRecordingIdx === idx ? 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.6)] scale-110' : '',
-              
+
               // State 2: Processing
               isProcessing && activeRecordingIdx === idx ? 'bg-slate-600 cursor-wait opacity-80' : '',
-              
+
               // State 3: Feedback
               results[idx] === 'perfect' ? 'bg-emerald-500 shadow-neon-cyan' : '',
               results[idx] === 'low' && activeRecordingIdx === idx && !isRecording && !isProcessing ? 'bg-amber-500' : ''
@@ -47,25 +48,26 @@
 
             <!-- State Icons -->
             <template v-if="isProcessing && activeRecordingIdx === idx">
-              <Loader2 class="w-6 h-6 animate-spin text-white" />
+              <Loader2 class="w-6 h-6 animate-spin text-white pointer-events-none" />
             </template>
             <template v-else-if="isRecording && activeRecordingIdx === idx">
-              <Square class="w-6 h-6 text-white animate-pulse" />
+              <Square class="w-6 h-6 text-white animate-pulse pointer-events-none" />
             </template>
             <template v-else-if="results[idx] === 'perfect'">
-              <Check class="w-8 h-8 text-white" />
+              <Check class="w-8 h-8 text-white pointer-events-none" />
             </template>
             <template v-else>
-              <Mic class="w-7 h-7 text-white" :class="{ 'animate-bounce': !isRecording && !results[idx] }" />
+              <Mic class="w-7 h-7 text-white pointer-events-none"
+                :class="{ 'animate-bounce': !isRecording && !results[idx] }" />
             </template>
 
             <!-- Pulse Effect for Idle -->
             <div v-if="!isRecording && !isProcessing && results[idx] === null"
-              class="absolute -inset-1 border border-nebula-primary rounded-full animate-ping opacity-30" />
-              
+              class="pointer-events-none absolute -inset-1 border border-nebula-primary rounded-full animate-ping opacity-30" />
+
             <!-- Pulse Effect for Recording -->
             <div v-if="isRecording && activeRecordingIdx === idx"
-              class="absolute -inset-2 border-2 border-red-500 rounded-full animate-ping opacity-40" />
+              class="pointer-events-none absolute -inset-2 border-2 border-red-500 rounded-full animate-ping opacity-40" />
           </button>
         </div>
 

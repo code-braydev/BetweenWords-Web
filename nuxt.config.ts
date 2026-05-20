@@ -7,10 +7,44 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      link: [{ rel: "icon", type: "image/png", href: "/logo.png" }],
+      title: "Between Words — Learning Lab",
+      meta: [
+        {
+          name: "description",
+          content:
+            "Practica Present Perfect con actividades interactivas: writing, listening y speaking. Evalúa y registra tus resultados.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:title", content: "Between Words — Learning Lab" },
+        {
+          property: "og:description",
+          content:
+            "Practica Present Perfect con actividades interactivas: writing, listening y speaking. Evalúa y registra tus resultados.",
+        },
+        { property: "og:image", content: "/og-image.png" },
+        {
+          property: "og:image:alt",
+          content: "Between Words — Final Quiz preview",
+        },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Between Words — Learning Lab" },
+        {
+          name: "twitter:description",
+          content:
+            "Practica Present Perfect con actividades interactivas: writing, listening y speaking.",
+        },
+        { name: "twitter:image", content: "/og-image.png" },
+      ],
+      link: [
+        { rel: "icon", type: "image/png", href: "/logo.png" },
+        { rel: "canonical", href: "/" },
+      ],
     },
   },
   runtimeConfig: {
+    public: {
+      siteUrl: process.env.SITE_URL || "",
+    },
     geminiApiKey: process.env.GEMINI_API_KEY,
     geminiModel: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     firebaseProjectId: process.env.FIREBASE_PROJECT_ID,

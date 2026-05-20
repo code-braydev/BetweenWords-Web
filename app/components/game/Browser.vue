@@ -6,16 +6,16 @@
             class="h-12 bg-slate-200/80 dark:bg-black/60 backdrop-blur-xl border-b border-slate-300 dark:border-white/10 flex items-center px-4 gap-4 shrink-0 z-50 shadow-lg justify-between">
             <div class="flex items-center gap-4 flex-1">
                 <GameWindowControls />
-                <div class="flex gap-2 text-slate-500 dark:text-white/40 hidden sm:flex">
+                <div class="gap-2 text-slate-500 dark:text-white/40 hidden sm:flex">
                     <ChevronLeft @click="goBack"
                         class="w-5 h-5 cursor-pointer hover:text-slate-800 dark:hover:text-white transition-colors"
-                        :class="{'opacity-30 cursor-not-allowed': historyIndex === 0}" />
+                        :class="{ 'opacity-30 cursor-not-allowed': historyIndex === 0 }" />
                     <ChevronRight @click="goForward"
                         class="w-5 h-5 cursor-pointer hover:text-slate-800 dark:hover:text-white transition-colors"
-                        :class="{'opacity-30 cursor-not-allowed': historyIndex >= history.length - 1}" />
+                        :class="{ 'opacity-30 cursor-not-allowed': historyIndex >= history.length - 1 }" />
                     <RotateCw @click="reload"
                         class="w-4 h-4 mt-0.5 cursor-pointer hover:text-slate-800 dark:hover:text-white transition-colors"
-                        :class="{'animate-spin text-nebula-primary': isReloading}" />
+                        :class="{ 'animate-spin text-nebula-primary': isReloading }" />
                 </div>
                 <!-- URL / Search Bar -->
                 <div
@@ -66,26 +66,22 @@
                 <div class="flex gap-4 flex-wrap justify-center max-w-3xl">
                     <button @click="setCategorySearch('Article')"
                         class="px-6 py-3 rounded-full border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-nebula-primary/10 hover:border-nebula-primary/30 transition-all text-sm font-bold text-slate-700 dark:text-white/80 flex items-center gap-2 group">
-                        <Globe
-                            class="w-4 h-4 text-nebula-primary group-hover:scale-110 transition-transform" />
+                        <Globe class="w-4 h-4 text-nebula-primary group-hover:scale-110 transition-transform" />
                         Articles
                     </button>
                     <button @click="setCategorySearch('Practice Lab')"
                         class="px-6 py-3 rounded-full border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-nebula-cyan/10 hover:border-nebula-cyan/30 transition-all text-sm font-bold text-slate-700 dark:text-white/80 flex items-center gap-2 group">
-                        <Youtube
-                            class="w-4 h-4 text-nebula-cyan group-hover:scale-110 transition-transform" />
+                        <Youtube class="w-4 h-4 text-nebula-cyan group-hover:scale-110 transition-transform" />
                         Videos
                     </button>
                     <button @click="setCategorySearch('Resource Hub')"
                         class="px-6 py-3 rounded-full border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all text-sm font-bold text-slate-700 dark:text-white/80 flex items-center gap-2 group">
-                        <FileText
-                            class="w-4 h-4 text-slate-400 group-hover:scale-110 transition-transform" />
+                        <FileText class="w-4 h-4 text-slate-400 group-hover:scale-110 transition-transform" />
                         PDFs
                     </button>
                     <button @click="setCategorySearch('Grammar Guide')"
                         class="px-6 py-3 rounded-full border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-nebula-secondary/10 hover:border-nebula-secondary/30 transition-all text-sm font-bold text-slate-700 dark:text-white/80 flex items-center gap-2 group">
-                        <BookOpen
-                            class="w-4 h-4 text-nebula-secondary group-hover:scale-110 transition-transform" />
+                        <BookOpen class="w-4 h-4 text-nebula-secondary group-hover:scale-110 transition-transform" />
                         Guides
                     </button>
                 </div>
@@ -114,8 +110,7 @@
 
                 <!-- Results List (Google Style) -->
                 <div v-else class="space-y-7">
-                    <div v-for="res in filteredResources" :key="res.id"
-                        @click="handleResultClick(res)"
+                    <div v-for="res in filteredResources" :key="res.id" @click="handleResultClick(res)"
                         class="cursor-pointer group">
                         <!-- URL line -->
                         <p class="text-xs font-mono mb-0.5 truncate"
@@ -125,7 +120,8 @@
                         <!-- Title -->
                         <h3
                             class="text-lg font-bold text-blue-700 dark:text-nebula-cyan group-hover:underline transition-colors leading-snug">
-                            <component v-if="res.isLocalExam" :is="ClipboardList" class="w-4 h-4 inline mr-1.5 -mt-0.5" />
+                            <component v-if="res.isLocalExam" :is="ClipboardList"
+                                class="w-4 h-4 inline mr-1.5 -mt-0.5" />
                             <component v-else :is="getCategoryStyles(res.category || 'Resource Hub').icon"
                                 class="w-4 h-4 inline mr-1.5 -mt-0.5"
                                 :class="getCategoryStyles(res.category || 'Resource Hub').text" />
@@ -154,8 +150,7 @@
                 class="flex-1 overflow-y-auto custom-scrollbar p-6 lg:p-12 relative bg-white dark:bg-transparent animate-fade-in">
                 <div class="max-w-3xl mx-auto">
                     <div class="mb-8 border-b border-slate-200 dark:border-white/10 pb-6">
-                        <h1
-                            class="text-2xl font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
+                        <h1 class="text-2xl font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
                             Final Quiz: Present Perfect</h1>
                         <p class="text-sm text-slate-600 dark:text-white/60">Responde todo primero y después
                             envía el examen para revisar o ver tu nota.</p>
@@ -165,8 +160,7 @@
 
                     <div
                         class="mt-12 p-6 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 text-center">
-                        <p
-                            class="text-[10px] text-slate-400 dark:text-white/30 uppercase tracking-[0.2em] font-bold">
+                        <p class="text-[10px] text-slate-400 dark:text-white/30 uppercase tracking-[0.2em] font-bold">
                             Tus resultados se sincronizarán con el reporte de notas en Excel.
                         </p>
                     </div>
@@ -224,7 +218,7 @@ const searchQuery = ref(props.initialQuery) // Bound to inputs
 const isReloading = ref(false)
 
 // History state
-const history = ref([ { view: props.initialMode, query: props.initialQuery } ])
+const history = ref([{ view: props.initialMode, query: props.initialQuery }])
 const historyIndex = ref(0)
 
 const currentView = computed(() => history.value[historyIndex.value].view)
@@ -233,9 +227,9 @@ const activeQuery = computed(() => history.value[historyIndex.value].query)
 // If launched directly in exam mode, setup initial history state
 onMounted(() => {
     if (props.initialMode === 'exam') {
-        history.value = [ { view: 'exam', query: '' } ]
+        history.value = [{ view: 'exam', query: '' }]
     } else if (props.initialQuery) {
-        history.value = [ { view: 'results', query: props.initialQuery } ]
+        history.value = [{ view: 'results', query: props.initialQuery }]
     }
 })
 

@@ -38,6 +38,7 @@ export const useGameStore = defineStore("game", {
       id: "",
       topic: "",
       sheetUrl: "",
+      professor: "",
       valid: false,
       expiresAt: 0,
     },
@@ -141,6 +142,7 @@ export const useGameStore = defineStore("game", {
       id: string;
       topic?: string;
       sheetUrl?: string;
+      professor?: string;
       expiresAt?: number;
     }) {
       // If the session ID changed, reset the game state
@@ -151,6 +153,7 @@ export const useGameStore = defineStore("game", {
       this.session.id = session.id;
       this.session.topic = session.topic ?? "";
       this.session.sheetUrl = session.sheetUrl ?? "";
+      this.session.professor = session.professor ?? "";
       this.session.expiresAt = session.expiresAt ?? 0;
       this.session.valid = true;
     },
@@ -158,6 +161,7 @@ export const useGameStore = defineStore("game", {
     clearSession() {
       this.session.id = "";
       this.session.topic = "";
+      this.session.professor = "";
       this.session.sheetUrl = "";
       this.session.valid = false;
       this.session.expiresAt = 0;
@@ -177,6 +181,25 @@ export const useGameStore = defineStore("game", {
       this.academic.isExamCompleted = false;
 
       this.resetSecurity();
+    },
+
+    logout() {
+      // ── 1. Clean user data ──────────────────────────────────────────
+      this.user.fullName = "";
+      this.user.nickname = "";
+      this.user.gradeGroup = "";
+
+      // ── Clear session professor as well
+      this.clearSession();
+
+      // ── 3. Reset game status ────────────────────────────────────────
+      this.resetGame();
+
+      // ── 4. Clear browser storage ────────────────────────────────────
+      if (typeof window !== "undefined") {
+        sessionStorage.clear();
+        localStorage.clear();
+      }
     },
   },
 
