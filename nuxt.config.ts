@@ -5,6 +5,17 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.SITE_URL || "https://between-words.braydev.xyz",
+    },
+    geminiApiKey: process.env.GEMINI_API_KEY,
+    geminiModel: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+    firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
+    firebaseClientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    firebasePrivateKey: process.env.FIREBASE_PRIVATE_KEY,
+    deepgramApiKey: process.env.DEEPGRAM_API_KEY,
+  },
   app: {
     head: {
       title: "Between Words — Learning Lab",
@@ -21,7 +32,10 @@ export default defineNuxtConfig({
           content:
             "Practica Present Perfect con actividades interactivas: writing, listening y speaking. Evalúa y registra tus resultados.",
         },
-        { property: "og:image", content: "/og-image.png" },
+        {
+          property: "og:image",
+          content: "https://between-words.braydev.xyz/og-image.png",
+        },
         {
           property: "og:image:alt",
           content: "Between Words — Final Quiz preview",
@@ -33,24 +47,16 @@ export default defineNuxtConfig({
           content:
             "Practica Present Perfect con actividades interactivas: writing, listening y speaking.",
         },
-        { name: "twitter:image", content: "/og-image.png" },
+        {
+          name: "twitter:image",
+          content: "https://between-words.braydev.xyz/og-image.png",
+        },
       ],
       link: [
         { rel: "icon", type: "image/png", href: "/logo.png" },
         { rel: "canonical", href: "/" },
       ],
     },
-  },
-  runtimeConfig: {
-    public: {
-      siteUrl: process.env.SITE_URL || "",
-    },
-    geminiApiKey: process.env.GEMINI_API_KEY,
-    geminiModel: process.env.GEMINI_MODEL || "gemini-2.5-flash",
-    firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
-    firebaseClientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    firebasePrivateKey: process.env.FIREBASE_PRIVATE_KEY,
-    deepgramApiKey: process.env.DEEPGRAM_API_KEY,
   },
   modules: [
     "@nuxtjs/tailwindcss",
