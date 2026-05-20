@@ -1,75 +1,50 @@
-# Nuxt Minimal Starter
+<div align="center">
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+# 🌠 Between Words: THE COSMIC OS SIMULATOR
 
-## Setup
+<img src="https://raw.githubusercontent.com/TU_USUARIO/TU_REPOSITORIO/main/banner.png" alt="Between Words UI">
 
-Make sure to install dependencies:
+> _"Don't just learn English, operate the system."_
 
-```bash
-# npm
-npm install
+</div>
 
-# pnpm
-pnpm install
+---
 
-# yarn
-yarn install
+## 🌌 La Esencia: Más allá del OVA
 
-# bun
-bun install
-```
+_Between Words_ no nació como un juego tradicional, sino como una **decisión de ingeniería estratégica**. Tras evaluar la complejidad de animaciones y lógica de juegos convencionales, el proyecto evolucionó hacia un **Simulador de Sistema Operativo (OS Simulator)**.
 
-## Development Server
+El objetivo es claro: crear un entorno donde el aprendizaje del _Present Perfect_ no sea un trámite, sino una **experiencia de identidad digital**.
 
-Start the development server on `http://localhost:3000`:
+### 🛠️ ¿Por qué esta arquitectura?
 
-```bash
-# npm
-npm run dev
+- **Ingeniería en TypeScript:** Se priorizó el uso de TypeScript para garantizar una lógica de estado robusta y estable, transformando una "interfaz web" en una herramienta funcional que responde como un computador real.
+- **Diseño Visual (Neon-Cosmic):** La paleta cromática (cian, magenta, violeta sobre fondos oscuros) no es estética gratuita; es una decisión de **UX para la inmersión profunda**, diseñada para reducir la fatiga visual y mantener al usuario conectado con la "consola" del sistema.
+- **Gamificación por Exploración:** Aquí no hay un "camino obligatorio". La esencia del _chismoseo inteligente_ permite que el estudiante descubra pistas en chats simulados (WhatsApp Desktop), gestione su perfil, personalice estados y explore el sistema. El aprendizaje es orgánico: ocurre mientras investigas el entorno.
 
-# pnpm
-pnpm dev
+---
 
-# yarn
-yarn dev
+## 🛰️ Módulos del Ecosistema
 
-# bun
-bun run dev
-```
+- **`/` (Raíz):** El escritorio central. Tu espacio de trabajo, tu identidad.
+- **`/learning`:** Base de conocimientos sobre _Present Perfect_.
+- **`/activities`:** Prácticas interactivas para fortalecer el dominio.
+- **`/messages`:** Copiloto de Inteligencia Artificial para resolución de dudas en tiempo real.
+- **`/resources`:** Documentación y soporte adicional.
+- **`/credits`:** Reconocimiento al desarrollo y la guía pedagógica.
 
-## Production
+---
 
-Build the application for production:
+## 🎯 Objetivo Pedagógico
 
-```bash
-# npm
-npm run build
+Evaluar y fortalecer la competencia gramatical en el uso del _Present Perfect_ mediante un modelo de aprendizaje **autónomo, inmersivo y altamente tecnológico**. El reto final es localizar y resolver el examen de suficiencia, validando el dominio del tiempo verbal dentro de este entorno simulado.
 
-# pnpm
-pnpm build
+---
 
-# yarn
-yarn build
+## 👤 Desarrollado por
 
-# bun
-bun run build
-```
+**BrayDev** | [portfolio.braydev.xyz](https://portfolio.braydev.xyz)
 
-Locally preview production build:
+> _"Transformando la experiencia educativa a través de la simulación y la arquitectura de sistemas. El código no solo enseña, también crea mundos."_
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+---
