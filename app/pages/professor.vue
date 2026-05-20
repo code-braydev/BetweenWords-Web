@@ -71,7 +71,8 @@
 
           <!-- Success Card Component -->
           <div v-else>
-            <ProfessorSuccessCard v-if="true" :generated-url="generatedUrl" @reset="sessionCreated = false" />
+            <ProfessorSuccessCard v-if="true" :generated-url="generatedUrl" @reset="sessionCreated = false"
+              @share-whatsapp="shareToWhatsApp" />
           </div>
         </Transition>
       </div>
