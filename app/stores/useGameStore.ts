@@ -38,7 +38,6 @@ export const useGameStore = defineStore("game", {
       id: "",
       topic: "",
       sheetUrl: "",
-      professor: "",
       valid: false,
       expiresAt: 0,
     },
@@ -153,7 +152,6 @@ export const useGameStore = defineStore("game", {
       this.session.id = session.id;
       this.session.topic = session.topic ?? "";
       this.session.sheetUrl = session.sheetUrl ?? "";
-      this.session.professor = session.professor ?? "";
       this.session.expiresAt = session.expiresAt ?? 0;
       this.session.valid = true;
     },
@@ -161,7 +159,6 @@ export const useGameStore = defineStore("game", {
     clearSession() {
       this.session.id = "";
       this.session.topic = "";
-      this.session.professor = "";
       this.session.sheetUrl = "";
       this.session.valid = false;
       this.session.expiresAt = 0;

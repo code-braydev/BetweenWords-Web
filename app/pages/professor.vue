@@ -53,8 +53,6 @@
               <div class="space-y-4">
                 <UiInput v-model="form.sheetUrl" type="url" :icon="LinkIcon" label="Google Sheet URL"
                   placeholder="https://docs.google.com/spreadsheets/d/..." :glass="true" />
-                <UiInput v-model="form.professor" label="Nombre del profesor (opcional)"
-                  placeholder="Ej. Prof. Juan Pérez" :glass="true" />
                 <!-- Warning Note -->
                 <p
                   class="text-[9px] font-black uppercase tracking-[0.15em] text-nebula-cyan/70 bg-nebula-cyan/5 border border-nebula-cyan/10 p-3 rounded-lg flex items-center gap-2">
@@ -65,7 +63,7 @@
 
               <!-- Submit Button -->
               <UiButton type="submit" variant="primary" size="lg" :loading="loading" :disabled="loading || !isFormValid"
-                label="Generar Sesión de Aprendizaje" class="w-full" />
+                label="Generar Sesión" class="w-full" />
             </form>
           </div>
 
@@ -136,7 +134,7 @@ const copied = ref(false)
 
 const shareToWhatsApp = () => {
   const inviter = form.professor?.trim() || ''
-  const message = (inviter ? `${inviter} te invita a jugar en Between Words.` : `Te invito a jugar en Between Words.`) + `\nUnete aqui ${generatedUrl.value}`
+  const message = (inviter ? `${inviter} te invita a jugar en Between Words.` : `Te invito a jugar en Between Words.`) + `\n\nUnete aqui ${generatedUrl.value}`
   const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
   window.open(waUrl, '_blank')
 }
