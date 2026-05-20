@@ -137,7 +137,7 @@ const getIcon = (name) => {
 }
 
 const openExam = () => {
-    store.openApp('browser')
+    store.openApp('browser', { mode: 'exam' })
 }
 
 // State

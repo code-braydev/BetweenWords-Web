@@ -153,17 +153,10 @@
                         <h1 class="text-2xl font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
                             Final Quiz: Present Perfect</h1>
                         <p class="text-sm text-slate-600 dark:text-white/60">Responde todo primero y después
-                            envía el examen para revisar o ver tu nota.</p>
+                            envía el examen para revisar</p>
                     </div>
 
                     <GameQuizActivity />
-
-                    <div
-                        class="mt-12 p-6 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 text-center">
-                        <p class="text-[10px] text-slate-400 dark:text-white/30 uppercase tracking-[0.2em] font-bold">
-                            Tus resultados se sincronizarán con el reporte de notas en Excel.
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -186,8 +179,7 @@
                 <p class="text-sm text-slate-600 dark:text-white/70 leading-relaxed">
                     Este navegador es un entorno seguro para consultar fuentes oficiales sobre el
                     <strong class="text-nebula-primary">Present Perfect</strong>. Usa la barra de búsqueda para
-                    encontrar guías, ejercicios, o escribe <strong>"exam"</strong> para acceder a la evaluación
-                    final.
+                    encontrar guías, ejercicios, exames etc...
                 </p>
                 <div class="mt-8 flex justify-end">
                     <UiButton label="ENTENDIDO" variant="primary" size="sm" @click="showHelpModal = false" />

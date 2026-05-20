@@ -10,11 +10,11 @@ export const useGameStore = defineStore("game", {
 
     status: {
       isPcUnlocked: false,
-      isWhatsappUnlocked: false,
       isFileUnlocked: false,
       isMaximized: false,
       currentStep: "login",
       runningApps: [] as string[],
+      browserMode: "home" as string,
       hasStarted: false,
       sessionActive: false,
       guideSeen: false,
@@ -80,10 +80,16 @@ export const useGameStore = defineStore("game", {
       this.resetSecurity();
     },
 
-    openApp(appName: string) {
+    openApp(appName: string, options?: { mode?: string; query?: string }) {
       if (!this.status.runningApps.includes(appName)) {
         this.status.runningApps.push(appName);
       }
+
+      // If opening browser, allow specifying a mode (e.g. 'exam')
+      if (appName === "browser") {
+        this.status.browserMode = options?.mode ?? "home";
+      }
+
       this.status.currentStep = appName;
       this.status.isMaximized = false;
     },
@@ -166,7 +172,6 @@ export const useGameStore = defineStore("game", {
 
     resetGame() {
       this.status.isPcUnlocked = false;
-      this.status.isWhatsappUnlocked = false;
       this.status.isFileUnlocked = false;
       this.status.isMaximized = false;
       this.status.currentStep = "login";

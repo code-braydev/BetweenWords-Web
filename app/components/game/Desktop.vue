@@ -35,7 +35,7 @@ const store = useGameStore()
 const emit = defineEmits(['settings'])
 
 const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1200)
-const browserMode = computed(() => 'home')
+const browserMode = computed(() => store.status.browserMode || 'home')
 
 const updateWidth = () => {
     windowWidth.value = window.innerWidth
