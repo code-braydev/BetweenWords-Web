@@ -84,4 +84,46 @@ input::-ms-reveal,
 input::-ms-clear {
     display: none;
 }
+
+.scrollbar-custom::-webkit-scrollbar,
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.28);
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.scrollbar-custom textarea::-webkit-scrollbar,
+.scrollbar-custom input::-webkit-scrollbar,
+.custom-scrollbar textarea::-webkit-scrollbar,
+.custom-scrollbar input::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.scrollbar-custom textarea::-webkit-scrollbar-thumb,
+.scrollbar-custom input::-webkit-scrollbar-thumb,
+.custom-scrollbar textarea::-webkit-scrollbar-thumb,
+.custom-scrollbar input::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.32);
+    border-radius: 10px;
+}
+
+/* Firefox support */
+.scrollbar-custom,
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 100, 100, 0.32) transparent;
+}
 </style>
