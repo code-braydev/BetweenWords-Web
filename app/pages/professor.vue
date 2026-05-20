@@ -71,8 +71,8 @@
 
           <!-- Success Card Component -->
           <div v-else>
-            <ProfessorSuccessCard v-if="true" :generated-url="generatedUrl" @reset="sessionCreated = false"
-              @share-whatsapp="shareToWhatsApp" />
+            <ProfessorSuccessCard v-if="true" :generated-url="generatedUrl" :professor-name="form.professor"
+              @reset="sessionCreated = false" />
           </div>
         </Transition>
       </div>
@@ -112,24 +112,6 @@ const durationOptions = [
 ];
 
 const copied = ref(false)
-
-const shareToWhatsApp = () => {
-  const inviter = form.professor?.trim() || ''
-  const message = (inviter ? `${inviter} te invita a jugar en Between Words.` : `Te invito a jugar en Between Words.`) + `\nUnete aqui ${generatedUrl.value}`
-  const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
-  window.open(waUrl, '_blank')
-}
-
-const copyLink = async () => {
-  try {
-    await navigator.clipboard.writeText(generatedUrl.value)
-    copied.value = true
-    setTimeout(() => (copied.value = false), 2000)
-  } catch (e) {
-    console.error('Copy failed', e)
-    alert('No fue posible copiar. Selecciona y copia manualmente.')
-  }
-}
 
 const form = reactive({
   institution: '',
@@ -183,14 +165,6 @@ const createSession = async () => {
     loading.value = false;
   }
 };
-
-const isLocalhost = computed(() => {
-  try {
-    return generatedUrl.value.includes('localhost') || window.location.origin.includes('localhost')
-  } catch (e) {
-    return false
-  }
-})
 </script>
 
 <style scoped>

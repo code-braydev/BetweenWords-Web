@@ -13,7 +13,7 @@
         {{ generatedUrl }}
       </div>
       <div class="flex items-center gap-3 shrink-0">
-        <button type="button" @click="$emit('share-whatsapp')"
+        <button type="button" @click="shareToWhatsApp"
           class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-[#25D366]/15 border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366]/25 hover:border-[#25D366]/50 transition-colors font-semibold text-sm shadow-[0_0_18px_rgba(37,211,102,0.12)]">
           <span class="w-5 h-5 inline-flex items-center justify-center" aria-hidden>
             <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
@@ -47,9 +47,8 @@ import { Check, Copy } from 'lucide-vue-next';
 
 const props = defineProps<{
   generatedUrl: string
+  professorName?: string
 }>();
-
-defineEmits(['reset', 'share-whatsapp']);
 
 const copied = ref(false);
 
@@ -57,6 +56,13 @@ const copyUrl = () => {
   navigator.clipboard.writeText(props.generatedUrl);
   copied.value = true;
   setTimeout(() => copied.value = false, 2000);
+};
+
+const shareToWhatsApp = () => {
+  const inviter = props.professorName?.trim() || ''
+  const message = (inviter ? `${inviter} te invita a jugar en Between Words.` : 'Te invito a jugar en Between Words.') + `\n\nUnete aqui. ${props.generatedUrl}`
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
+  window.open(waUrl, '_blank', 'noopener,noreferrer')
 };
 </script>
 
